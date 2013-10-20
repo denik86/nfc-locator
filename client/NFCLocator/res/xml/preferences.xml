@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory 
+        android:title="Automatic Configuration">
+        <Preference 
+            android:key="pref_qr"
+            android:title="One-Click Configuration"
+            android:summary="Use QR Code to configure the application" />
+    </PreferenceCategory>
+    <PreferenceCategory 
+        android:title="Manual Configuration">
+    	<EditTextPreference
+        	android:key="pref_server"
+        	android:title="Server Address"
+        	android:summary="Address of the authentication server"
+        	android:defaultValue="www.example.it" />
+    	<EditTextPreference
+        	android:key="pref_username"
+        	android:title="Account Name"
+        	android:summary="Username for authentication"
+        	android:defaultValue="Username" />
+    	<EditTextPreference
+        	android:key="pref_password"
+        	android:title="Password"
+        	android:summary="Password of the account"
+        	android:defaultValue=""
+        	android:password="true" />
+    </PreferenceCategory>
+</PreferenceScreen>
