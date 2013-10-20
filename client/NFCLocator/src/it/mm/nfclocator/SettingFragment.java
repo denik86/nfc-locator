@@ -50,41 +50,37 @@ public class SettingFragment extends PreferenceFragment {
 		Context context = this.getActivity().getBaseContext();
 		if (requestCode == 0 && resultCode == android.app.Activity.RESULT_OK) {
 			// The string has the following pattern:
-			// address:<address> username:<username> password:<password>
-			String address, username, password;
-			String[] addressArray, usernameArray, passwordArray;
+			// address:<address> username:<username>
+			String address, username;
+			String[] addressArray, usernameArray;
 			String result = intent.getStringExtra("SCAN_RESULT");
 			String[] info = result.split(" ");
-			if(info.length == 3) {
+			if(info.length == 2) {
 				addressArray = info[0].split(":");
 				if(addressArray.length == 2) {
 					address = addressArray[1];
 					usernameArray = info[1].split(":");
 					if(usernameArray.length == 2) {
 						username = usernameArray[1];
-						passwordArray = info[2].split(":");
-						if(passwordArray.length == 2) {
-							password = passwordArray[1];
+						
+						// save new data
+						prefsEditor.putString("pref_server", address);
+						prefsEditor.putString("pref_username", username);
+						prefsEditor.commit();
 							
-							// save new data
-							prefsEditor.putString("pref_server", address);
-							prefsEditor.putString("pref_username", username);
-							prefsEditor.putString("pref_password", password);
-							prefsEditor.commit();
+						// update GUI to show new data
+						((BaseAdapter)getPreferenceScreen().getRootAdapter()).notifyDataSetChanged();
 							
-							// tell the user that all is ok
-							Toast success = Toast.makeText(context, "Information updated succesfully", Toast.LENGTH_LONG);
-							success.show();
+						// force the user to write the password
+						PreferenceScreen screen = getPreferenceScreen();
+						screen.onItemClick(null, null, passwordIndex, 0);
+						
+						// tell the user that all is ok
+						Toast success = Toast.makeText(context, "Information updated succesfully", Toast.LENGTH_LONG);
+						success.show();
 							
-							// update GUI to show new data
-							((BaseAdapter)getPreferenceScreen().getRootAdapter()).notifyDataSetChanged();
-							
-							// force the user to write the password
-							PreferenceScreen screen = getPreferenceScreen();
-							screen.onItemClick(null, null, passwordIndex, 0);
-							
-							return;
-						}
+						return;
+						
 					}
 				}
 				
