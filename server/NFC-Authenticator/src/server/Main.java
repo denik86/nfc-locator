@@ -32,6 +32,23 @@ public class Main {
 		// initialize user
 		try {
 			Users users = new Users(usersFile);
+			final JFrame frame = new JFrame("NFC Locator Server");
+	        win = new Window(frame, users);
+	        frame.addWindowListener(new WindowAdapter() {
+	        @Override
+	        public void windowClosing(WindowEvent e) {
+	                win.stop();
+	                frame.setVisible(false);
+	                try {
+	                        Thread.currentThread().sleep(2000);
+	                } catch (Exception ex) {
+	                        ex.printStackTrace();
+	                }
+	                System.exit(0);
+	        }
+	        });
+	        Thread window = new Thread(win);
+	        window.start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -40,6 +57,11 @@ public class Main {
 		Listener ls = new Listener(port);
 		Thread listener = new Thread(ls);
 		listener.start();
+		
+		// PROVA
+		//Listener runnableAscolto = new Listener(9092);
+		//Thread threadAscolto = new Thread(runnableAscolto);
+		//threadAscolto.start();
 		
 		
 	}

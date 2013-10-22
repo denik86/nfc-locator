@@ -41,44 +41,52 @@ public class Users {
 		}
 	}
 	
-	public void getAccounts() {
+	public String[] getAccounts() {
+		ArrayList<String> list = new ArrayList<String>();
 		if(accounts.size() == 0) {
-			System.out.println("Users list is empty");
+			System.out.println("### DEBUG: lista vuota");
+			return null;
 		} else {
-			System.out.println("User list: ");
 			Enumeration<String> enumKey = accounts.keys();
 			int counter = 1;
 			while(enumKey.hasMoreElements()) {
 			    String key = enumKey.nextElement();
 			    ArrayList<String> auth = accounts.get(key).getAuth();
-			    System.out.print(counter + " - " + key);
-			    for(int i=0; i < auth.size(); i++) {
-			    	System.out.print(" " + auth.get(i));
-			    }
-			    System.out.println(" ");
-			    counter++;
+			    list.add(key);
 			}
+			//return (String[])list.toArray();
+			return null;
 		}
 	}
 	
-	public void removeUser(String user) {
+	public boolean removeUser(String user) {
 		if(accounts.containsKey(user)) {
 			accounts.remove(user);
 			System.out.println("User " + user + " deleted.");
+			return true;
 		} else {
 			System.out.println("User " + user + " not found");
+			return false;
 		}
 	}
 	
-	public void addUser(String user, String password) {
-		if(accounts.containsKey(user))
+	public boolean addUser(String user, String password) {
+		if(accounts.containsKey(user)) {
 			System.out.println("The specified user is already present");
-		else {
+			return false;
+		} else {
 			accounts.put(user, new UserInfo(password));
 			System.out.println("User " + user + " has been added");
+			return true;
 		}
 	}
 	
-	
+	public ArrayList<String> getAuth (String user) {
+		if(accounts.containsKey(user)) {
+			return accounts.get(user).getAuth();
+		} else {
+			return null;
+		}
+	}
 
 }
