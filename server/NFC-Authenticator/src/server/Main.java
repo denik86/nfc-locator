@@ -37,6 +37,11 @@ public class Main {
 			e.printStackTrace();
 		}
 		
+		Listener ls = new Listener(port);
+		Thread listener = new Thread(ls);
+		listener.start();
+		
+		
 	}
 
 }

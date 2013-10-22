@@ -17,8 +17,9 @@ public class Window extends JPanel implements Runnable {
 	}
 	
 	public void run () {
+		// definire la finestra
 		while (!stop) {
-			
+			// aggiorna la finestra
 		}
 	}
 
