@@ -42,20 +42,21 @@ public class Users {
 	}
 	
 	public String[] getAccounts() {
-		ArrayList<String> list = new ArrayList<String>();
 		if(accounts.size() == 0) {
 			System.out.println("### DEBUG: lista vuota");
 			return null;
 		} else {
+			String[] list = new String[accounts.size()];
 			Enumeration<String> enumKey = accounts.keys();
-			int counter = 1;
+			int i = 0;
 			while(enumKey.hasMoreElements()) {
 			    String key = enumKey.nextElement();
-			    ArrayList<String> auth = accounts.get(key).getAuth();
-			    list.add(key);
+			    list[i] = key;
+			    i++;
 			}
-			//return (String[])list.toArray();
-			return null;
+			return list;
+			
+			
 		}
 	}
 	
