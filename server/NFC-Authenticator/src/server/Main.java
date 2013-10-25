@@ -33,7 +33,7 @@ public class Main {
 		try {
 			Users users = new Users(usersFile);
 			final JFrame frame = new JFrame("NFC Locator Server");
-	        win = new Window(frame, users);
+	        win = new Window(frame, users, port);
 	        frame.addWindowListener(new WindowAdapter() {
 	        @Override
 	        public void windowClosing(WindowEvent e) {
@@ -54,15 +54,8 @@ public class Main {
 			e.printStackTrace();
 		}
 		
-		Listener ls = new Listener(port);
-		Thread listener = new Thread(ls);
-		listener.start();
 		
-		// PROVA
-		//Listener runnableAscolto = new Listener(9092);
-		//Thread threadAscolto = new Thread(runnableAscolto);
-		//threadAscolto.start();
-		
+	
 		
 	}
 
