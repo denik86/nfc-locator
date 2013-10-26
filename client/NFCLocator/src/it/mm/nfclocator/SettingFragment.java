@@ -17,7 +17,7 @@ public class SettingFragment extends PreferenceFragment {
 	
 	private SharedPreferences prefs;
 	private SharedPreferences.Editor prefsEditor;
-	private final int passwordIndex = 5;
+	private final int passwordIndex = 6;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -50,40 +50,43 @@ public class SettingFragment extends PreferenceFragment {
 		Context context = this.getActivity().getBaseContext();
 		if (requestCode == 0 && resultCode == android.app.Activity.RESULT_OK) {
 			// The string has the following pattern:
-			// address:<address> username:<username>
-			String address, username;
-			String[] addressArray, usernameArray;
+			// address:<address> port:<port> username:<username>
+			String address, port, username;
+			String[] addressArray, portArray, usernameArray;
 			String result = intent.getStringExtra("SCAN_RESULT");
 			String[] info = result.split(" ");
-			if(info.length == 2) {
+			if(info.length == 3) {
 				addressArray = info[0].split(":");
 				if(addressArray.length == 2) {
 					address = addressArray[1];
-					usernameArray = info[1].split(":");
-					if(usernameArray.length == 2) {
-						username = usernameArray[1];
-						
-						// save new data
-						prefsEditor.putString("pref_server", address);
-						prefsEditor.putString("pref_username", username);
-						prefsEditor.commit();
+					portArray = info[1].split(":");
+					if(portArray.length == 2) {
+						port = portArray[1];
+						usernameArray = info[2].split(":");
+						if(usernameArray.length == 2) {
+							username = usernameArray[1];
 							
-						// update GUI to show new data
-						((BaseAdapter)getPreferenceScreen().getRootAdapter()).notifyDataSetChanged();
+							// save new data
+							prefsEditor.putString("pref_server", address);
+							prefsEditor.putString("pref_port", port);
+							prefsEditor.putString("pref_username", username);
+							prefsEditor.commit();
+								
+							// update GUI to show new data
+							((BaseAdapter)getPreferenceScreen().getRootAdapter()).notifyDataSetChanged();
+								
+							// ask the password to the user
+							PreferenceScreen screen = getPreferenceScreen();
+							screen.onItemClick(null, null, passwordIndex, 0);
 							
-						// force the user to write the password
-						PreferenceScreen screen = getPreferenceScreen();
-						screen.onItemClick(null, null, passwordIndex, 0);
-						
-						// tell the user that all is ok
-						Toast success = Toast.makeText(context, "Information updated succesfully", Toast.LENGTH_LONG);
-						success.show();
-							
-						return;
-						
+							// tell the user that all is ok
+							Toast success = Toast.makeText(context, "Information updated succesfully", Toast.LENGTH_LONG);
+							success.show();
+								
+							return;
+						}
 					}
 				}
-				
 			}
 			
 			Toast success = Toast.makeText(context, "Invalid QR Code format", Toast.LENGTH_LONG);

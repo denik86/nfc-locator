@@ -14,6 +14,11 @@
         	android:title="Server Address"
         	android:summary="Address of the authentication server"
         	android:defaultValue="www.example.it" />
+    	<EditTextPreference 
+    	    android:key="pref_port"
+    	    android:title="Server Port"
+    	    android:summary="Port of the authentication server"
+    	    android:defaultValue="9092"/>
     	<EditTextPreference
         	android:key="pref_username"
         	android:title="Account Name"
