@@ -21,7 +21,8 @@
         android:theme="@android:style/Theme.Holo" >
         <activity
             android:name="it.mm.nfclocator.Configuration"
-            android:label="NFC Locator Configuration" >
+            android:label="NFC Locator Configuration"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,7 +31,8 @@
         </activity>
         <activity
             android:name="it.mm.nfclocator.Reader"
-            android:label="NFC Locator Reader" >
+            android:label="NFC Locator Reader" 
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 

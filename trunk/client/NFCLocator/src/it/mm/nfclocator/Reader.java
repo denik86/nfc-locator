@@ -12,48 +12,42 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class Reader extends Activity {
+	
+	ProgressDialog progDial;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_reader);
 		
-		ImageButton sendButton = (ImageButton) findViewById(R.id.openButton);
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		final ImageButton sendButton = (ImageButton) findViewById(R.id.openButton);
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		progDial = new ProgressDialog(Reader.this);
 		TextView location = (TextView) findViewById(R.id.location);
-		// TODO set the location with tag indormations
+		// TODO set the location with tag informations
 		
 		sendButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				// TODO lock the button
-				ProgressDialog progDial = new ProgressDialog(Reader.this);
+				// lock the button
+				sendButton.setEnabled(false);
+				
 				progDial.setMessage("Connecting...");
 				progDial.setCancelable(true); // TODO for now
 				progDial.show();
 				// TODO connect to the server
+				// usare un thread separato per la connessione
 				// TODO check the result and show something to the user (alertDialog)
 				// TODO close the activity
+				
+				sendButton.setEnabled(true);
 			}
 		});
 		
-		//response.setText(prefs.getString("pref_username", "error"));
-		
-		/*try {
-			FileInputStream fis = openFileInput("configuration");
-			String reading = "";
-			
-			int content;
-			while ((content = fis.read()) != -1) {
-				reading += (char)content;
-			}
-			if(!reading.equals("")) 
-				response.setText(reading);
-			else
-				response.setText("file empty");
-		} catch (Exception e) {
-			response.setText("no file found");
-		}*/
+	}
+	
+	public void updateConnectionStatus(boolean end, String status) {
+		progDial.setMessage("prova");
 	}
 
 	@Override
