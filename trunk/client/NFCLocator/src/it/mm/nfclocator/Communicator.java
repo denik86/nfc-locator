@@ -10,18 +10,21 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 public class Communicator implements Runnable {
 	
-	private Reader reader;
+	private Handler handler;
 	private String address;
 	private String port;
 	private String user;
 	private String password;
 	
-	public Communicator(Reader reader, String address, String port, String user, String password) {
-		this.reader = reader;
+	public Communicator(Handler handler, String address, String port, String user, String password) {
+		this.handler = handler;
 		this.address = address;
 		this.port = port;
 		this.user = user;
@@ -32,26 +35,29 @@ public class Communicator implements Runnable {
 		String message;
 		try {
 			InetAddress serverAddr = InetAddress.getByName(address);
-			Log.d("Client", "Connecting...");
+			message = "Connecting...";
+			Log.d("Client", message);
+			updateConnectionStatus(-1, message);
 			Socket socket = new Socket(serverAddr, Integer.parseInt(port));
 			message = "Connected, sending data...";
 			Log.d("Client", message);
-			reader.updateConnectionStatus(false, false, message);
+			updateConnectionStatus(0, message);
 			PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
 			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			String request = user + ":" + password;
 			out.println(request);
+			out.flush();
 			String response = in.readLine();
 			if(response.equals(user+":OK")) {
 				// success
 				message = "Access granted";
 				Log.d("Client", message);
-				reader.updateConnectionStatus(true, false, message);
+				updateConnectionStatus(1, message);
 			} else {
 				// unsuccess
 				message = "Access denied";
 				Log.d("Client", message);
-				reader.updateConnectionStatus(true, true, message);
+				updateConnectionStatus(2, message);
 			}
 			in.close();
 			out.close();
@@ -61,16 +67,25 @@ public class Communicator implements Runnable {
 		} catch (NumberFormatException e1) {
 			String error = "The port " + port + " is not valid";
 			Log.d("Client", error, e1);
-			reader.updateConnectionStatus(true, true, error);
+			updateConnectionStatus(3, error);
 		} catch (UnknownHostException e2) {
 			String error = "The address " + port + "is not valid";
 			Log.d("Client", error, e2);
-			reader.updateConnectionStatus(true, true, error);
+			updateConnectionStatus(3, error);
 		} catch (IOException e3) {
 			String error = "The connection has been closed due to a network error";
 			Log.d("Client", error, e3);
-			reader.updateConnectionStatus(true, true, error);
+			updateConnectionStatus(3, error);
 		}
+	}
+	
+	private void updateConnectionStatus(int code, String status) {
+		Message msg = handler.obtainMessage();
+		Bundle bundle = new Bundle();
+		bundle.putInt("code", code);
+		bundle.putString("status", status);
+		msg.setData(bundle);
+		handler.sendMessage(msg);
 	}
 
 }
