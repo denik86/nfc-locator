@@ -1,11 +1,22 @@
 package it.mm.nfclocator;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.Ndef;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,19 +27,28 @@ import android.widget.Toast;
 public class Reader extends Activity {
 	
 	private ProgressDialog progDial;
+	private Context context;
 	private Reader istance;
+	private Handler handler;
+	private AlertDialog.Builder builder;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_reader);
 		istance = this;
+		context = this.getApplicationContext();
+		handler = new MyHandler();
+		builder = new AlertDialog.Builder(this);
 		
 		final ImageButton sendButton = (ImageButton) findViewById(R.id.openButton);
 		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		progDial = new ProgressDialog(Reader.this);
+		progDial.setCancelable(false);
+		
 		TextView location = (TextView) findViewById(R.id.location);
-		// TODO set the location with tag informations
+		// read ndef info
+		location.setText(this.readTag());
 		
 		sendButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -36,22 +56,19 @@ public class Reader extends Activity {
 				// lock the button
 				sendButton.setEnabled(false);
 				// read the saved informations
-				String address = prefs.getString("pref_address", null);
+				String address = prefs.getString("pref_server", null);
 				String port = prefs.getString("pref_port", null);
 				String user = prefs.getString("pref_username", null);
 				String password = prefs.getString("pref_password", null);
 				if(address==null || port==null || user==null || password==null) {
-					Context context = istance.getBaseContext();
+					//Context context = istance.getBaseContext();
 					Toast error = Toast.makeText(context, "Some configuration is missing", Toast.LENGTH_LONG);
 					error.show();
 					return;
 				}
 				
-				progDial.setMessage("Connecting...");
-				progDial.setCancelable(true); // TODO for now
-				progDial.show();
-				// TODO connect to the server
-				Thread connection = new Thread(new Communicator(istance, address, port, user, password));
+				// connect to the server
+				Thread connection = new Thread(new Communicator(handler, address, port, user, password));
 				connection.start();
 				// TODO check the result and show something to the user (alertDialog)
 				// TODO close the activity
@@ -62,14 +79,113 @@ public class Reader extends Activity {
 		
 	}
 	
-	/**
-	 * Communicate with the user
-	 * @param end true when the connection is over
-	 * @param error true if the end is due to an error
-	 * @param status message to communicate to the user
-	 */
-	public void updateConnectionStatus(boolean end, boolean error, String status) {
-		progDial.setMessage("prova");
+	@Override
+	protected void onStop() {
+		super.onStop();
+		progDial.dismiss();
+	}
+	
+	private String readTag () {
+		Intent nfcintent = getIntent();
+		Tag myTag = (Tag) nfcintent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+		
+		Ndef ndefTag = Ndef.get(myTag);
+		int size = ndefTag.getMaxSize();
+		boolean writable = ndefTag.isWritable();
+		String type = ndefTag.getType();
+		
+		NdefMessage ndefMesg = ndefTag.getCachedNdefMessage();
+		NdefRecord[] ndefRecords = ndefMesg.getRecords();
+		String reading = "";
+		int len = ndefRecords.length;
+		for (int i=0; i<len; i++) {
+			byte[] payload = ndefRecords[i].getPayload();
+			for(int j=3; j<payload.length; j++) {
+				reading += (char)payload[j];
+			}
+			if(!"".equals(reading))
+				return reading;
+		}
+		return reading;
+	}
+	
+	private class MyHandler extends Handler {
+		@Override
+		public void handleMessage(Message msg) {
+			Bundle bundle = msg.getData();
+			int code = bundle.getInt("code");
+			String content = bundle.getString("status");
+			
+			switch (code) {
+			case -1: {
+				// initialize the dialog
+				progDial.setMessage(content);
+				progDial.show();
+			}
+			case 0:
+				// update message
+				progDial.setMessage(content);
+				break;
+			case 1: {
+				// Access Granted
+				progDial.hide();
+				builder.setTitle("Access Granted");
+				builder.setMessage("Authentication successfull");
+				builder.setCancelable(false);
+				builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						istance.finish();
+					}
+				});
+				AlertDialog alert = builder.create();
+				alert.show();
+				break;
+			}
+			case 2: {
+				// error for Access Denied
+				progDial.hide();
+				builder.setTitle("Access Denied");
+				builder.setMessage("The authentication was rejected by the server");
+				builder.setCancelable(false);
+				builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						istance.finish();
+					}
+				});
+				AlertDialog alert = builder.create();
+				alert.show();
+				break;
+			}
+			case 3: {
+				// settings error
+				progDial.hide();
+				builder.setTitle("An error occurred");
+				builder.setMessage(content);
+				builder.setCancelable(false);
+				builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						istance.finish();
+					}
+				});
+				AlertDialog alert = builder.create();
+				alert.show();
+				break;
+			}
+
+			default:
+				Log.d("Reader", "Unexpected error");
+				break;
+			}
+		}
 	}
 
 	@Override
