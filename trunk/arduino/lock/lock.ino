@@ -20,11 +20,14 @@
  *
  * SERVO MOTOR
  * Pin 9
+ * VCC: 5V
  */
 
 #include <Servo.h>
 #include <RFID.h>
 #include <LiquidCrystal_I2C.h>
+#include <Wire.h>
+#include <SPI.h>
 
 // LED pins
 #define LED_GREEN 5
@@ -42,17 +45,26 @@ boolean setup_done = false;
 Servo lock;
 LiquidCrystal_I2C lcd(0x27,20,4);
 RFID rfid(SS_PIN, RST_PIN); 
-int serNum0=0; // TODO add correct infos
-int serNum1=0;
-int serNum2=0;
-int serNum3=0;
-int serNum4=0;
-
-int pos = 0;
+int serNum0=130;
+int serNum1=191;
+int serNum2=30;
+int serNum3=205;
+int serNum4=238;
+char user[11];
 
 void setup() {
+  //initialize RFID reader
+  SPI.begin();
+  rfid.init();
+  
+  // initialize serial communication
   Serial.begin(9600);
+  
+  // initialize servo motor
   lock.attach(SERVO_PIN);
+  lock.write(0);
+  
+  // initialize lcd
   lcd.init();
   lcd.backlight();
   lcd.setCursor(0,0);
@@ -121,9 +133,11 @@ void loop() {
             analogWrite(LED_GREEN, 255);
             delay(300);
             analogWrite(LED_GREEN, 0);
-            // TODO open 'lock'
+            // open lock
+            lock.write(180);
             delay(2000);
-            // TODO close 'lock'
+            // close lock
+            lock.write(0);
             lcd.noDisplay();
             lcd.noBacklight();
          } else {
@@ -143,6 +157,12 @@ void loop() {
             delay(300);
             analogWrite(LED_RED, 0);
             delay(300);
+            // DEBUG
+            Serial.println(rfid.serNum[0]);
+            Serial.println(rfid.serNum[1]);
+            Serial.println(rfid.serNum[2]);
+            Serial.println(rfid.serNum[3]);
+            Serial.println(rfid.serNum[4]);
             //Serial.println("0");
             delay(2000);
             lcd.noDisplay();
@@ -157,24 +177,52 @@ void loop() {
       while (Serial.available() > 0) {
         if(Serial.read() == 'o') {
           // read user
+          int i=0;
+          while(Serial.available() > 0 && i < 10) {
+            user[i] = Serial.read();
+            i++;
+          }
+          // DEBUG try to send user back
+          //int j=0;
+          //while(j < i) {
+            //Serial.write(user[j]);
+            //j++;
+          //}
+          
+          // open
+          lcd.clear();
+          lcd.backlight();
+          lcd.display();
+          lcd.setCursor(0,0);
+          lcd.print("user ");
+          int j=0;
+          while(j < i) {
+            lcd.print(user[j]);
+            j++;
+          }
+          delay(100);
+          lcd.setCursor(0,1);
+          lcd.print("access granted");
+          analogWrite(LED_GREEN, 255);
+          //Serial.println("1");
+          delay(300);
+          analogWrite(LED_GREEN, 0);
+          delay(300);
+          analogWrite(LED_GREEN, 255);
+          delay(300);
+          analogWrite(LED_GREEN, 0);
+          // open lock
+          lock.write(180);
+          delay(2000);
+          // close lock
+          lock.write(0);
+          lcd.noDisplay();
+          lcd.noBacklight();
         }
       }
     }
   }
 
-  /*
-  for(pos = 0; pos < 180; pos += 1)
-  {
-    lock.write(pos);
-    delay(15);
-  }
-  for(pos = 180; pos >= 1; pos -= 1)
-  {
-    lock.write(pos);
-    delay(15);
-  }*/
-
-  //rfid.halt();
   delay(500);
 }
 
