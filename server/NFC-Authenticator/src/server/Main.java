@@ -10,11 +10,10 @@ import javax.swing.JFrame;
 
 public class Main {
 
-	private static final String usersFile = "users";
 	private static int port;
 	private static Window win;
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ClassNotFoundException {
 		
 		// read the first parameter (port)
 		if(args.length != 1) {
@@ -29,33 +28,36 @@ public class Main {
 			}
 		}
 		
-		// initialize user
-		try {
-			Users users = new Users(usersFile);
-			final JFrame frame = new JFrame("NFC Locator Server");
-	        win = new Window(frame, users, port);
-	        frame.addWindowListener(new WindowAdapter() {
-	        @Override
-	        public void windowClosing(WindowEvent e) {
-	                win.stop();
-	                frame.setVisible(false);
-	                try {
-	                        Thread.currentThread().sleep(2000);
-	                } catch (Exception ex) {
-	                        ex.printStackTrace();
-	                }
-	                System.exit(0);
-	        }
-	        });
-	        Thread window = new Thread(win);
-	        window.start();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		UsersDB db = new UsersDB("provaDB", "users");
+		
+		final JFrame frame = new JFrame("NFC Locator Server");
+		win = new Window(frame, db, port);
+		frame.addWindowListener(new WindowAdapter() {
+		
+		@Override
+		public void windowClosing(WindowEvent e) {
+		       // win.stop();
+		        frame.setVisible(false);
+		        try {
+		                Thread.currentThread().sleep(2000);
+		        } catch (Exception ex) {
+		                ex.printStackTrace();
+		        }
+		        System.exit(0);
 		}
+		});
+		Thread window = new Thread(win);
+		window.start();
 		
+		Listener ls = new Listener(port);
+		Thread listener = new Thread(ls);
+		listener.start();
 		
-	
+		// PROVA
+		//Listener runnableAscolto = new Listener(9092);
+		//Thread threadAscolto = new Thread(runnableAscolto);
+		//threadAscolto.start();
+		
 		
 	}
 
