@@ -1,9 +1,12 @@
 package server;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -42,31 +45,57 @@ public class Listener implements Runnable {
 	                    true); 
 				BufferedReader in = new BufferedReader(new InputStreamReader( clientSocket.getInputStream()));
 				String inputLine;
-				while ((inputLine = in.readLine()) != null) 
-		        { 
+				inputLine = in.readLine();
+		        if(inputLine != null) {
 					// TODO
 					// check if the format is ok ("username:password:resource")
 					String[] data = inputLine.split(":");
 					if(data.length == 3) {
 						// check username and password
-						if(true /* users.checkUser(inputLine[0], inputLine[1]) */) {
+						if(true /* users.checkUser(data[0], data[1]) */) {
 							// check auth
-							if (true /* users.checkUserAuth(inputLine[0], inputLine[2]) */) {
-								String address = "prova"; // users.getAddress(inputLine[2]);
-								// TODO connect to the resource
-								// send the response to the client
+							if (true /* users.checkUserAuth(data[0], data[2]) */) {
+								String[] address = "localhost:9094".split(":"); // users.getAddress(data[2]).split(":");
+								try {
+									InetAddress host = InetAddress.getByName(address[0]);
+									Socket resourceSocket = new Socket(host, Integer.parseInt(address[1]));
+									PrintWriter resourceOut = new PrintWriter(new BufferedWriter(new OutputStreamWriter(resourceSocket.getOutputStream())));
+									BufferedReader resourceIn = new BufferedReader(new InputStreamReader(resourceSocket.getInputStream()));
+									resourceOut.println("o"+data[0]);
+									resourceOut.flush();
+									resourceSocket.setSoTimeout(10000); // set readLine timeout to 10 sec
+									String answer = resourceIn.readLine();
+									out.println(data[0]+":OK");
+									resourceOut.close();
+									resourceIn.close();
+									resourceSocket.close();
+									in.close();
+									out.close();
+									clientSocket.close();
+								} catch (Exception e) {
+									e.printStackTrace();
+									out.println("An error has occurred while connecting with the resource");
+									in.close();
+									out.close();
+									clientSocket.close();
+								}
 							} else {
 								out.println("You don't have the authorization to access this resource");
+								in.close();
+								out.close();
+								clientSocket.close();
 							}
 						} else {
 							out.println("Invalid username or password.");
+							in.close();
+							out.close();
+							clientSocket.close();
 						}
 					} else {
 						out.println("Protocol mismatch.");
 						in.close();
 						out.close();
 						clientSocket.close();
-						break;
 					}
 					
 					/*System.out.println ("Server: " + inputLine); 
