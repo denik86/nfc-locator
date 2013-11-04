@@ -43,11 +43,20 @@ public class Listener implements Runnable {
 				String inputLine;
 				while ((inputLine = in.readLine()) != null) 
 		        { 
-		         System.out.println ("Server: " + inputLine); 
-		         out.println(inputLine); 
+					// TODO
+					// check if the format is ok
+					// check the username and the password
+					// check the auth
+					// if something is wrong stop it now, else
+					// get the address of the resource
+					// connect to the resource
+					// send the response to the client
+					
+					System.out.println ("Server: " + inputLine); 
+					out.println(inputLine); 
 
-		         if (inputLine.equals("Bye.")) 
-		             break; 
+					if (inputLine.equals("Bye.")) 
+						break; 
 		        } 
 			}
 		} catch (IOException e) {
