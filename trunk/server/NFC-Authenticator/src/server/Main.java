@@ -3,6 +3,7 @@ package server;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.swing.JFrame;
 
@@ -13,7 +14,7 @@ public class Main {
 	private static int port;
 	private static Window win;
 	
-	public static void main(String[] args) throws ClassNotFoundException {
+	public static void main(String[] args) throws ClassNotFoundException, SQLException {
 		
 		// read the first parameter (port)
 		if(args.length != 1) {
@@ -28,7 +29,23 @@ public class Main {
 			}
 		}
 		
-		UsersDB db = new UsersDB("provaDB", "users");
+		UsersDB db = new UsersDB("provaDB", "users", "auth");
+		db.addUser("utente1", "ciao");
+		//db.removeUser("utente1");
+		db.addUser("utente2", "casa");
+		db.addAuth("auth1", "address1");
+		//db.removeAuth("auth1");
+		db.addAuthToUser("utente2", "auth1");
+		if(db.checkUser("utente1", "ciao"))
+			System.out.println("CORRETTO");
+		else
+			System.out.println("ERRATO");
+		db.printAuth();
+		db.printUsers();
+		
+		
+		
+		
 		
 		final JFrame frame = new JFrame("NFC Locator Server");
 		win = new Window(frame, db, port);
