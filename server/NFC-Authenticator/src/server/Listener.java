@@ -15,6 +15,7 @@ public class Listener implements Runnable {
 	private Socket clientSocket;
 	
 	public Listener (int port) {
+		// TODO add userDB reference
 		this.port = port;
 	}
 	
@@ -44,19 +45,34 @@ public class Listener implements Runnable {
 				while ((inputLine = in.readLine()) != null) 
 		        { 
 					// TODO
-					// check if the format is ok
-					// check the username and the password
-					// check the auth
-					// if something is wrong stop it now, else
-					// get the address of the resource
-					// connect to the resource
-					// send the response to the client
+					// check if the format is ok ("username:password:resource")
+					String[] data = inputLine.split(":");
+					if(data.length == 3) {
+						// check username and password
+						if(true /* users.checkUser(inputLine[0], inputLine[1]) */) {
+							// check auth
+							if (true /* users.checkUserAuth(inputLine[0], inputLine[2]) */) {
+								String address = "prova"; // users.getAddress(inputLine[2]);
+								// TODO connect to the resource
+								// send the response to the client
+							} else {
+								out.println("You don't have the authorization to access this resource");
+							}
+						} else {
+							out.println("Invalid username or password.");
+						}
+					} else {
+						out.println("Protocol mismatch.");
+						in.close();
+						out.close();
+						clientSocket.close();
+						break;
+					}
 					
-					System.out.println ("Server: " + inputLine); 
+					/*System.out.println ("Server: " + inputLine); 
 					out.println(inputLine); 
-
 					if (inputLine.equals("Bye.")) 
-						break; 
+						break; */
 		        } 
 			}
 		} catch (IOException e) {
