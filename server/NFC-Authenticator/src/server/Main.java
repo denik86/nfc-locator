@@ -49,9 +49,9 @@ public class Main {
 		Thread window = new Thread(win);
 		window.start();
 		
-		Listener ls = new Listener(port);
-		Thread listener = new Thread(ls);
-		listener.start();
+		//Listener ls = new Listener(port);
+		//Thread listener = new Thread(ls);
+		//listener.start();
 		
 		// PROVA
 		//Listener runnableAscolto = new Listener(9092);
