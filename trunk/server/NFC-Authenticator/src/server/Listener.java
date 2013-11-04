@@ -73,7 +73,7 @@ public class Listener implements Runnable {
 									out.close();
 									clientSocket.close();
 								} catch (Exception e) {
-									e.printStackTrace();
+									// e.printStackTrace();
 									out.println("An error has occurred while connecting with the resource");
 									in.close();
 									out.close();
