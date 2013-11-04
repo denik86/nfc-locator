@@ -23,15 +23,17 @@ public class Window extends JPanel implements Runnable {
 	private JLabel title;
 	private JLabel textUsers;
 	private JButton start;
-	private JButton add;
-	private JButton remove;
+	private JButton addUser;
+	private JButton remUser;
 	private JButton addAuth;
+	private JButton remAuth;
 	private JList userList;
+	private JList authList;
 	private JScrollPane scrollList;
 	
 	private int port;
-	static final int WIDTH = 300;
-	static final int HEIGHT = 300;
+	static final int WIDTH = 800;
+	static final int HEIGHT = 400;
 	
 	private boolean isStart;
 	static private Listener ls;
@@ -60,13 +62,13 @@ public class Window extends JPanel implements Runnable {
         start = new JButton("Start Server");
         start.setBounds(150, 70, 120, 20);
 
-        add = new JButton("User +");
-        add.setBounds(150,120, 100, 20);
+        addUser = new JButton("+");
+        addUser.setBounds(10,280, 45, 20);
         
-        remove = new JButton("User -");
-        remove.setBounds(150, 150, 100, 20);
+        remUser = new JButton("-");
+        remUser.setBounds(65,280, 45, 20);
         
-        addAuth = new JButton("Add auth");
+        addAuth = new JButton("Authorizations");
         addAuth.setBounds(150, 180, 100, 20);
   
       
@@ -77,13 +79,22 @@ public class Window extends JPanel implements Runnable {
         userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scrollList = new JScrollPane(userList);
         scrollList.setBounds(10, 70, 100, 200);
+        
+        authList = new JList(users.getUsersName());
+        authList.setFixedCellWidth(20);
+        authList.setFixedCellHeight(20);
+        authList.setSelectedIndex(0);
+        authList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        authList.setBounds(10, 70, 100, 200);
+        scrollList = new JScrollPane(userList);
+        scrollList.setBounds(10, 70, 100, 200);
 
         panel.add(title);
         panel.add(textUsers);
-        panel.add(scrollList);
+        panel.add(new JScrollPane(userList));
         panel.add(start);
-        panel.add(add);
-        panel.add(remove);
+        panel.add(addUser);
+        panel.add(remUser);
         panel.add(addAuth);
         
 
@@ -109,7 +120,7 @@ public class Window extends JPanel implements Runnable {
         	}
         });
         
-        add.addActionListener(new ActionListener() {
+        addUser.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		
         		
@@ -129,7 +140,7 @@ public class Window extends JPanel implements Runnable {
         		
         });
         
-        remove.addActionListener(new ActionListener() {
+        remUser.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e)
         	{
         		String userRemoved = users.removeUser((String) userList.getSelectedValue());
@@ -141,7 +152,7 @@ public class Window extends JPanel implements Runnable {
         addAuth.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e)
         	{
-        		JFrame newAuth = new JFrame("Insert a new Authorization");
+        		JFrame newAuth = new JFrame("View and Edit Authorizations");
         		WindowAddAuth waa = new WindowAddAuth(newAuth, (String)userList.getSelectedValue());
         	}
         });
@@ -239,5 +250,4 @@ public class Window extends JPanel implements Runnable {
 	}
 
 	
-
 }
