@@ -30,20 +30,6 @@ public class Main {
 		}
 		
 		UsersDB db = new UsersDB("provaDB", "users", "auth");
-		//db.addUser("utente1", "ciao");
-		//db.removeUser("utente1");
-		db.addUser("utente2", "casa");
-		//db.addAuth("auth1", "address1");
-		//db.removeAuth("auth1");
-		db.addAuthToUser("utente1", "auth1");
-		if(db.checkAuthUser("utente1", "auth3"))
-			System.out.println("CORRETTO:: " +db.getAuthsUsers("utente2")[0]);
-		else
-			System.out.println("ERRATO");
-		db.printAuth();
-		db.printUsers();
-		
-		
 		
 		
 		
