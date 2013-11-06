@@ -48,15 +48,16 @@ public class Listener implements Runnable {
 				String inputLine;
 				inputLine = in.readLine();
 		        if(inputLine != null) {
-					// TODO
 					// check if the format is ok ("username:password:resource")
 					String[] data = inputLine.split(":");
 					if(data.length == 3) {
 						// check username and password
 						if(users.checkUser(data[0], data[1])) {
+							//System.out.println("User " + data[0] + " authenticated");
 							// check auth
 							if (users.checkAuthUser(data[0], data[2])) {
-								String[] address = "localhost:9094".split(":"); // users.getAddress(data[2]).split(":");
+								//System.out.println("User " + data[0] + " get the access to resource " + data[2]);
+								String[] address = "localhost:9094".split(":"); // TODO users.getAddress(data[2]).split(":");
 								try {
 									InetAddress host = InetAddress.getByName(address[0]);
 									Socket resourceSocket = new Socket(host, Integer.parseInt(address[1]));
@@ -65,7 +66,7 @@ public class Listener implements Runnable {
 									resourceOut.println("o"+data[0]);
 									resourceOut.flush();
 									resourceSocket.setSoTimeout(10000); // set readLine timeout to 10 sec
-									String answer = resourceIn.readLine();
+									String answer = resourceIn.readLine(); // used as ack
 									out.println(data[0]+":OK");
 									resourceOut.close();
 									resourceIn.close();
