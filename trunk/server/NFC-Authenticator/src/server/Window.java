@@ -146,7 +146,7 @@ public class Window extends JPanel implements Runnable {
         		
         		if(!isStart)
         		{
-        			ls = new Listener(port);
+        			ls = new Listener(port, users);
         			listener = new Thread(ls);
         			listener.start();
         			start.setText("Stop Server");

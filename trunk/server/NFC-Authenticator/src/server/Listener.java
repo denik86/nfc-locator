@@ -16,9 +16,10 @@ public class Listener implements Runnable {
 	public boolean stop = false;
 	private ServerSocket serverSocket;
 	private Socket clientSocket;
+	private UsersDB users;
 	
-	public Listener (int port) {
-		// TODO add userDB reference
+	public Listener (int port, UsersDB users) {
+		this.users = users;
 		this.port = port;
 	}
 	
@@ -52,7 +53,7 @@ public class Listener implements Runnable {
 					String[] data = inputLine.split(":");
 					if(data.length == 3) {
 						// check username and password
-						if(true /* users.checkUser(data[0], data[1]) */) {
+						if(users.checkUser(data[0], data[1])) {
 							// check auth
 							if (true /* users.checkUserAuth(data[0], data[2]) */) {
 								String[] address = "localhost:9094".split(":"); // users.getAddress(data[2]).split(":");
