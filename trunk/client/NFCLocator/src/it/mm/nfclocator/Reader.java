@@ -89,10 +89,14 @@ public class Reader extends Activity {
 		Intent nfcintent = getIntent();
 		Tag myTag = (Tag) nfcintent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 		
+		if (myTag == null)
+				return "Error"; // TODO terminare l'applicazione
+		
 		Ndef ndefTag = Ndef.get(myTag);
-		int size = ndefTag.getMaxSize();
-		boolean writable = ndefTag.isWritable();
-		String type = ndefTag.getType();
+		//int size = ndefTag.getMaxSize();
+		//boolean writable = ndefTag.isWritable();
+		//String type = ndefTag.getType();
+		
 		
 		NdefMessage ndefMesg = ndefTag.getCachedNdefMessage();
 		NdefRecord[] ndefRecords = ndefMesg.getRecords();
