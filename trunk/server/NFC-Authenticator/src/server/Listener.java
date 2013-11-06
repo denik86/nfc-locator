@@ -55,7 +55,7 @@ public class Listener implements Runnable {
 						// check username and password
 						if(users.checkUser(data[0], data[1])) {
 							// check auth
-							if (true /* users.checkUserAuth(data[0], data[2]) */) {
+							if (users.checkAuthUser(data[0], data[2])) {
 								String[] address = "localhost:9094".split(":"); // users.getAddress(data[2]).split(":");
 								try {
 									InetAddress host = InetAddress.getByName(address[0]);
