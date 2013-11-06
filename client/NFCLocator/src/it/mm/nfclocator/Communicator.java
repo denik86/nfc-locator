@@ -23,13 +23,15 @@ public class Communicator implements Runnable {
 	private String port;
 	private String user;
 	private String password;
+	private String location;
 	
-	public Communicator(Handler handler, String address, String port, String user, String password) {
+	public Communicator(Handler handler, String address, String port, String user, String password, String location) {
 		this.handler = handler;
 		this.address = address;
 		this.port = port;
 		this.user = user;
 		this.password = password;
+		this.location = location;
 	}
 	
 	public void run() {
@@ -46,7 +48,7 @@ public class Communicator implements Runnable {
 			updateConnectionStatus(0, message);
 			PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
 			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			String request = user + ":" + password;
+			String request = user + ":" + password + ":" + location; // TODO
 			out.println(request);
 			out.flush();
 			String response = in.readLine();
@@ -59,7 +61,7 @@ public class Communicator implements Runnable {
 				// unsuccess
 				message = "Access denied";
 				Log.d("Client", message);
-				updateConnectionStatus(2, message);
+				updateConnectionStatus(2, response);
 			}
 			in.close();
 			out.close();

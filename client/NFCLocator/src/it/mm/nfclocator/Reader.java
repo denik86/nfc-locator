@@ -31,6 +31,7 @@ public class Reader extends Activity {
 	private Reader istance;
 	private Handler handler;
 	private AlertDialog.Builder builder;
+	private String locationString;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,8 @@ public class Reader extends Activity {
 		
 		TextView location = (TextView) findViewById(R.id.location);
 		// read ndef info
-		location.setText(this.readTag());
+		locationString = this.readTag();
+		location.setText(locationString);
 		
 		sendButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -68,7 +70,7 @@ public class Reader extends Activity {
 				}
 				
 				// connect to the server
-				Thread connection = new Thread(new Communicator(handler, address, port, user, password));
+				Thread connection = new Thread(new Communicator(handler, address, port, user, password, locationString));
 				connection.start();
 				// TODO check the result and show something to the user (alertDialog)
 				// TODO close the activity
@@ -152,7 +154,7 @@ public class Reader extends Activity {
 				// error for Access Denied
 				progDial.hide();
 				builder.setTitle("Access Denied");
-				builder.setMessage("The authentication was rejected by the server");
+				builder.setMessage(content);
 				builder.setCancelable(false);
 				builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
 					
