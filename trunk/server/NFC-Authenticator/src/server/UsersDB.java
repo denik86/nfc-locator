@@ -92,13 +92,13 @@ public class UsersDB {
 		return false;
 	}
 	
-	public String[] getUsersName()
+	public String[] getUsers()
 	{
 		ResultSet rs;
 		String[] names = null;
 		try 
 		{
-			names = new String[countUsers()];
+			names = new String[t.executeQuery("SELECT COUNT(*) FROM "+tableUsers).getInt(1)];
 			rs = t.executeQuery( "select * from "+tableUsers+";" );
 	
 			int i = 0;
@@ -121,7 +121,7 @@ public class UsersDB {
 	
 	public void printUsers() throws SQLException
 	{
-		String[] users = getUsersName();
+		String[] users = getUsers();
 		for(int i = 0; i < users.length; i++)
 	    	System.out.println( (i+1) + ". " + users[i]);  
 	}
@@ -165,7 +165,18 @@ public class UsersDB {
 		return false;
 	}
 
-	public void addAuthToUser(String username, String auth)
+	public boolean checkAuthUser(String username, String auth)
+	{
+		try {
+			return t.executeQuery("select * from associations where auth = '"+auth+"' and username = '"+username+"' ;").next();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+
+	}
+	
+ 	public void addAuthToUser(String username, String auth)
 	{
 		try {
 			t.executeUpdate("insert into associations values('"+username+"', '"+auth+"')");
@@ -181,12 +192,39 @@ public class UsersDB {
 		String[] auth = null;
 		try 
 		{
-			auth = new String[countAuths()];
+			auth = new String[t.executeQuery("SELECT COUNT(*) FROM "+tableAuths).getInt(1)];
 			rs = t.executeQuery( "select * from "+tableAuths+";" );
 	
 			int i = 0;
 		    while ( rs.next() ) {
 		    	auth[i] = rs.getString("resource");
+		    	i++;
+		    } 
+		} 
+		catch (SQLException e) 
+		{
+			System.out.println("---------------------");
+			System.out.println("ERROR IN SQL COMMAND: ");
+			e.printStackTrace();
+			System.out.println("---------------------");
+			
+		}
+		return auth;
+		    
+	}
+	
+	public String[] getAuthsUsers(String username)
+	{
+		ResultSet rs;
+		String[] auth = null;
+		try 
+		{
+			auth = new String[t.executeQuery("SELECT COUNT(*) FROM associations").getInt(1)];
+			rs = t.executeQuery( "select auth from associations where username = '"+username+"';" );
+	
+			int i = 0;
+		    while ( rs.next() ) {
+		    	auth[i] = rs.getString("auth");
 		    	i++;
 		    } 
 		} 
@@ -208,39 +246,5 @@ public class UsersDB {
 		for(int i = 0; i < auth.length; i++)
 	    	System.out.println( (i+1) + ". " + auth[i]);  
 	}
-	
-	
-	public int countUsers()
-	{
-		int nrows = 0;
-		ResultSet rs;
-		try {
-			rs = t.executeQuery("SELECT COUNT(*) FROM "+tableUsers);
-			 nrows = rs.getInt(1);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return nrows;
-	   
-	    
-	}
-	
-	public int countAuths()
-	{
-		int nrows = 0;
-		ResultSet rs;
-		try {
-			rs = t.executeQuery("SELECT COUNT(*) FROM "+tableAuths);
-			 nrows = rs.getInt(1);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return nrows;
-	   
-	    
-	}
-	
 	
 }
