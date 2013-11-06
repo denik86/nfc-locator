@@ -8,7 +8,7 @@ port = 9093
 backlog = 5
 size = 1024
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-ser = serial.Serial('/dev/tty.usbserial', 9600)
+ser = serial.Serial('/dev/tty.usbmodem1451', 9600)
 s.bind((host,port))
 s.listen(backlog)
 while 1:
