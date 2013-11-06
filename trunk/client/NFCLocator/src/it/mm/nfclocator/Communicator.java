@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -38,7 +39,8 @@ public class Communicator implements Runnable {
 			message = "Connecting...";
 			Log.d("Client", message);
 			updateConnectionStatus(-1, message);
-			Socket socket = new Socket(serverAddr, Integer.parseInt(port));
+			Socket socket = new Socket();
+			socket.connect(new InetSocketAddress(serverAddr, Integer.parseInt(port)), 10000);
 			message = "Connected, sending data...";
 			Log.d("Client", message);
 			updateConnectionStatus(0, message);
