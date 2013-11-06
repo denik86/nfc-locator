@@ -1,5 +1,6 @@
 package server;
 
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -7,9 +8,11 @@ import java.awt.event.WindowEvent;
 
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -19,6 +22,11 @@ import javax.swing.event.ListSelectionListener;
 
 public class Window extends JPanel implements Runnable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	JFrame frame;
 	
 	private UsersDB users;
@@ -66,8 +74,7 @@ public class Window extends JPanel implements Runnable {
         title.setBounds(10, 10, (WIDTH/2), 20);
         
         textUsers = new JLabel("<html><i> Users: </i></html> ");
-        textUsers.setBounds(10, 50, 70, 20);
-        
+        textUsers.setBounds(10, 50, 70, 20);  
        
         textAuths = new JLabel("<html><i> Authorizations: </i></html> ");
         textAuths.setBounds(500, 50, 120, 20);
@@ -81,8 +88,21 @@ public class Window extends JPanel implements Runnable {
         remUser = new JButton("-");
         remUser.setBounds(65,280, 45, 20);
         
-        addAuth = new JButton("Authorizations");
-        addAuth.setBounds(150, 180, 100, 20);
+        addAuthUser = new JButton("<html><h5>Add Auth</h5></html>");
+        addAuthUser.setBounds(10,310, 100, 20);
+        addAuthUser.setMargin(new Insets(1,1,1,1));
+        
+        remAuthUser = new JButton("<html><h5>Remove Auth</h5></html>");
+        remAuthUser.setBounds(150,280, 100, 20);
+        remAuthUser.setMargin(new Insets(1,1,1,1));
+        
+        addAuth = new JButton("+");
+        addAuth.setBounds(500, 280, 45, 20);
+        addAuth.setMargin(new Insets(1,1,1,1));
+        
+        remAuth = new JButton("-");
+        remAuth.setBounds(555, 280, 45, 20);
+        remAuth.setMargin(new Insets(1,1,1,1));
   
       
 		userList = new JList(users.getUsers());
@@ -111,8 +131,8 @@ public class Window extends JPanel implements Runnable {
         scrollAuth = new JScrollPane(authList);
         scrollAuth.setBounds(500, 70, 100, 200);
         
-        textAuthsUser = new JLabel ("<html><i><h5> Authorizations of user : " +  userList.getSelectedValue() + " </h5></i></html> ");
-        textAuthsUser.setBounds(150, 50, 200, 30);
+        textAuthsUser = new JLabel ("<html><i><h5> Authorizations of user : <br> <font color=red>"  +  userList.getSelectedValue() + "</font> </h5></i></html> ");
+        textAuthsUser.setBounds(150, 40, 200, 30);
 
         
 
@@ -126,21 +146,22 @@ public class Window extends JPanel implements Runnable {
         panel.add(start);
         panel.add(addUser);
         panel.add(remUser);
+        panel.add(addAuthUser);
+        panel.add(remAuthUser);
         panel.add(addAuth);
-        
+        panel.add(remAuth);        
 
         frame.setLocationRelativeTo(null);
         
         userList.addListSelectionListener(new ListSelectionListener() {
         	public void valueChanged(ListSelectionEvent e) {
+        		
         		String username = (String) userList.getSelectedValue();
-        		textAuthsUser.setText("<html><i><h5> Authorizations of user : " +  userList.getSelectedValue() + " </h5></i></html> ");
+        		textAuthsUser.setText("<html><i><h5> Authorizations of user :<br> <font color=red>"  +  userList.getSelectedValue() + "</font></h5></i></html> ");
         		authUserList.setListData(users.getAuthsUsers(username));
         	}
         });
-        
-    
-        
+
         start.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		
@@ -167,7 +188,7 @@ public class Window extends JPanel implements Runnable {
         		
         		System.out.println("DEBUG -- Aperta AddUser");
         		JFrame add = new JFrame("Insert a new User");
-        		WindowAddUser wau = new WindowAddUser(add);
+        		new WindowAddUser(add);
         		
     	        frame.addWindowListener(new WindowAdapter() {
     		        @Override
@@ -184,17 +205,68 @@ public class Window extends JPanel implements Runnable {
         remUser.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e)
         	{
-        		String userRemoved = users.removeUser((String) userList.getSelectedValue());
-        		userList.setListData(users.getUsers());
-        		System.out.println("-- Account '" + userRemoved + "' REMOVED!");
+        		if(userList.getSelectedValue() == null)
+        			JOptionPane.showMessageDialog(frame, "No user selected");
+        		else
+        		{
+	        		String userRemoved = users.removeUser((String) userList.getSelectedValue());
+	        		userList.setListData(users.getUsers());
+	        		System.out.println("-- Account '" + userRemoved + "' REMOVED!");
+        		}
         	}
         });
         
         addAuth.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e)
         	{
-        		JFrame newAuth = new JFrame("View and Edit Authorizations");
-        		WindowAddAuth waa = new WindowAddAuth(newAuth, (String)userList.getSelectedValue());
+        		JFrame newAuth = new JFrame("Add an Authorization");
+        		new WindowAddAuth(newAuth);
+        	}
+        });
+        
+        remAuth.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e)
+        	{
+        		if(users.getAuths().length == 0)
+        			JOptionPane.showMessageDialog(frame, "There are no authorizations");
+        		else if(authList.getSelectedValue() == null)
+        			JOptionPane.showMessageDialog(frame, "No authorization selected");
+        		else if(users.getUsersAuth((String) authList.getSelectedValue()).length == 0 || 
+        				JOptionPane.showConfirmDialog(null, "There are several users which use this authoriation. \n Are you sure to cancel this authorization?", 
+        						"Cancel " + authList.getSelectedValue(), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+	        	{
+		        	users.removeAuth((String) authList.getSelectedValue());
+		        	authList.setListData(users.getAuths());
+		        	authUserList.setListData(users.getAuthsUsers((String)userList.getSelectedValue()));
+	        	}
+        	}
+        });
+        
+        addAuthUser.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e)
+        	{
+        		if(userList.getSelectedValue() == null)
+        			JOptionPane.showMessageDialog(frame, "No user selected");
+        		else if(users.getAuths().length == 0)
+        			JOptionPane.showMessageDialog(frame, "There are no authorizations");
+        		else
+        		{
+	        		JFrame addAuthUser = new JFrame("Add an Authorization to user" + userList.getSelectedValue());
+	        		new WindowAddAuthUser(addAuthUser, (String)userList.getSelectedValue());
+        		}
+        	}
+        }); 
+        
+        remAuthUser.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e)
+        	{
+        		if(authUserList.getSelectedValue() == null)
+        			JOptionPane.showMessageDialog(frame, "No authorization selected");
+        		else
+        		{
+	        		users.remAuthToUser((String)userList.getSelectedValue(), (String) authUserList.getSelectedValue());
+	        		authUserList.setListData(users.getAuthsUsers((String)userList.getSelectedValue()));
+        		}
         	}
         });
         
@@ -203,6 +275,10 @@ public class Window extends JPanel implements Runnable {
 	
 	class WindowAddUser extends JFrame {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private JFrame frame;
 		public WindowAddUser (JFrame fram) {
 
@@ -251,24 +327,34 @@ public class Window extends JPanel implements Runnable {
 	
 	class WindowAddAuth extends JFrame {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private JFrame frame;
-		public WindowAddAuth (JFrame fram, final String username) {
+		public WindowAddAuth (JFrame fram) {
 
 			this.frame = fram;
 			frame.setSize(330, 120);
 			frame.setResizable(false);
 	        JPanel panel = (JPanel) frame.getContentPane();
 	        panel.setLayout(null);
-	        JLabel labelAuth = new JLabel("Authorization for " + username +":");
-	        final JTextField textAuth = new JTextField();
+	        JLabel labelResource = new JLabel("Resource: ");
+	        JLabel labelAddress = new JLabel("Address: ");
+	        final JTextField textResource = new JTextField();
+	        final JTextField textAddress = new JTextField();
 	        final JButton addButton = new JButton("Add");
 	        
-	        labelAuth.setBounds(10, 20, 100, 20);
-	        textAuth.setBounds(90, 50, 200, 20);
-	        addButton.setBounds((frame.getSize().width / 2) - 30, 60 , 60, 20);
+	        labelResource.setBounds(10, 20, 100, 20);
+	        textResource.setBounds(90, 20, 200, 20);
+	        labelAddress.setBounds(10, 50, 100, 20);
+	        textAddress.setBounds(90, 50, 200, 20);
+	        addButton.setBounds((frame.getSize().width / 2) - 30, 80 , 70, 20);
 
-	        panel.add(labelAuth);
-	        panel.add(textAuth);
+	        panel.add(labelResource);
+	        panel.add(textResource);
+	        panel.add(labelAddress);
+	        panel.add(textAddress);
 	        panel.add(addButton);
 	        
 	        frame.setLocationRelativeTo(null);
@@ -278,17 +364,77 @@ public class Window extends JPanel implements Runnable {
 	        addButton.addActionListener(new ActionListener() {
 	        	public void actionPerformed(ActionEvent e)
 	        	{
-	        		users.addAuth(textAuth.getText(), username);
+	        		users.addAuth(textResource.getText(), textAddress.getText());
+	        		authList.setListData(users.getAuths());
 
 	        		frame.setEnabled(false);
 	        		frame.setVisible(false);
-	        		System.out.println("-- Authorization '" + textAuth.getText() + "' ADDED at user " + username);
+	        		System.out.println("-- Authorization '" + textResource.getText() + " ADDED");
 	        	}
 	        });
+
+		}
+	}
+	
+	class WindowAddAuthUser extends JFrame {
+		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private JFrame frame;
+		public WindowAddAuthUser (JFrame fram, final String username) {
+
+			final JComboBox auths = new JComboBox(users.getAuthsNOUser(username));
+			auths.setBounds(10, 50, 150, 20);
+			this.frame = fram;
+			frame.setSize(300, 110);
+			frame.setResizable(false);
+	        JPanel panel = (JPanel) frame.getContentPane();
+	        panel.setLayout(null);
+	        JLabel labelAuth = new JLabel("<html>Authorization for <font color = red>" + username +"</font>:<html>");
+	        final JButton addButton = new JButton("Add");
 	        
+	        labelAuth.setBounds(10, 20, 300, 20);
+	       
+	        addButton.setBounds(200, 50 , 70, 20);
+
+	        panel.add(labelAuth);
+	      
+	        panel.add(addButton);
+	        panel.add(auths);
 	        
+	        frame.setLocationRelativeTo(null);
+	        frame.setVisible(true);
+	        frame.setEnabled(true);
+	        
+	        addButton.addActionListener(new ActionListener() {
+	        	public void actionPerformed(ActionEvent e)
+	        	{
+
+	        		frame.setEnabled(false);
+	        		frame.setVisible(false);
+	        		users.addAuthToUser(username, (String) auths.getSelectedItem());
+	        		authUserList.setListData(users.getAuthsUsers(username));
+	        		System.out.println("-- Authorization '" + auths.getSelectedItem() + "' ADDED at user " + username);
+	        	}
+	        });
+
 		}
 	}
 
-	
+	class Alert extends JFrame
+	{
+		private static final long serialVersionUID = 1L;
+		JFrame frame=new JFrame("Message box appear in JFrame");
+		public Alert(String message)
+		{
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setSize(400,400);
+			frame.setLocationRelativeTo(null);
+			frame.setVisible(true);
+			
+		}
+	}
+
 }

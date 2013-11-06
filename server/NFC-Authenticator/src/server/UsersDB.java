@@ -27,13 +27,26 @@ public class UsersDB {
 			
 			t = conn.createStatement();
 			
-			t.executeUpdate("create table if not exists "+tableUsers+" (username char(100), password char (50));");
+			t.executeUpdate(
+					"create table if not exists "
+					+tableUsers+
+					" (username char(100) not null, " +
+					"password char (50) not null, " +
+					"primary key(username));");
 			System.out.println("Opened table "+ tableUsers + " successfully");
 			
-			t.executeUpdate("create table if not exists "+tableAuths+" (resource char(100), address char (50));");
+			t.executeUpdate(
+					"create table if not exists "
+					+tableAuths+
+					" (resource char(100) not null, " +
+					"address char (50) not null, " +
+					"primary key(resource));");
 			System.out.println("Opened table "+ tableAuths + " successfully");
 			
-			t.executeUpdate("create table if not exists associations (username char(100), auth char(100));");
+			t.executeUpdate("create table if not exists associations " +
+							"(username char(100), auth char(100), " +
+							"foreign key(username) references "+tableUsers+"(username) on delete cascade, " +
+							"foreign key(auth) references "+tableAuths+"(resource) on delete cascade)");
 		}
 		catch(SQLException e)
 		{
@@ -58,7 +71,7 @@ public class UsersDB {
 	public String removeUser(String username)
 	{
 		try {
-			t.executeUpdate("delete from "+tableUsers+" where username = '"+username+"'");
+			t.executeUpdate("pragma foreign_keys = on; delete from "+tableUsers+" where username = '"+username+"'");
 		} catch (SQLException e) {
 			System.out.println("ERR :: failed to remove the user "+username);
 			e.printStackTrace();
@@ -145,9 +158,9 @@ public class UsersDB {
 	{
 		try {
 			if(checkAuth(auth))
-				t.executeUpdate("delete from "+tableAuths+" where resource = '"+auth+"'");
+				t.executeUpdate("pragma foreign_keys = on; delete from "+tableAuths+" where resource = '"+auth+"'");
 			else
-				System.out.println("NOTICE : Authorization "+auth+" is already present into database");
+				System.out.println("NOTICE : Authorization "+auth+" is not present into database");
 		} catch (SQLException e) {
 			System.out.println("ERR :: failed to remove the authorization "+auth);
 			e.printStackTrace();
@@ -186,7 +199,21 @@ public class UsersDB {
 		}
 	}
 	
-	public String[] getAuths()
+ 	public String remAuthToUser(String username, String auth)
+ 	{
+ 		try {
+			if(checkAuthUser(username,auth))
+				t.executeUpdate("delete from associations where username = '"+username+"' and auth = '"+auth+"'");
+			else
+				System.out.println("NOTICE : Authorization "+auth+" is not associated to user "+username);
+		} catch (SQLException e) {
+			System.out.println("ERR :: failed to remove the association "+auth+" - " + username);
+			e.printStackTrace();
+		}
+		return auth;
+ 	}
+	
+ 	public String[] getAuths()
 	{
 		ResultSet rs;
 		String[] auth = null;
@@ -207,19 +234,47 @@ public class UsersDB {
 			System.out.println("ERROR IN SQL COMMAND: ");
 			e.printStackTrace();
 			System.out.println("---------------------");
-			
 		}
 		return auth;
 		    
 	}
 	
+ 	public String[] getAuthsNOUser(String username)
+ 	{
+ 		System.out.println(username);
+ 		
+ 		ResultSet rs;
+		String[] auth = null;
+		try 
+		{
+			auth = new String[t.executeQuery("SELECT count(*) from (select resource from "+tableAuths+" as auth except select auth from associations where username = '"+username+"') s").getInt(1)];
+			rs = t.executeQuery("SELECT resource from "+tableAuths+" as auth except select auth from associations where username = '"+username+"'");
+			System.out.println("dimens non " +auth.length);
+	
+			int i = 0;
+		    while ( rs.next() ) {
+		    	auth[i] = rs.getString(1);
+		    	i++;
+		    } 
+		} 
+		catch (SQLException e) 
+		{
+			System.out.println("---------------------");
+			System.out.println("ERROR IN SQL COMMAND: ");
+			e.printStackTrace();
+			System.out.println("---------------------");
+			
+		}
+		return auth;
+ 	}
+ 	
 	public String[] getAuthsUsers(String username)
 	{
 		ResultSet rs;
 		String[] auth = null;
 		try 
 		{
-			auth = new String[t.executeQuery("SELECT COUNT(*) FROM associations").getInt(1)];
+			auth = new String[t.executeQuery("SELECT COUNT(*) FROM associations where username = '"+username+"'").getInt(1)];
 			rs = t.executeQuery( "select auth from associations where username = '"+username+"';" );
 	
 			int i = 0;
@@ -236,8 +291,33 @@ public class UsersDB {
 			System.out.println("---------------------");
 			
 		}
-		return auth;
-		    
+		return auth;    
+	}
+	
+	public String[] getUsersAuth(String auth)
+	{
+		ResultSet rs;
+		String[] users = null;
+		try 
+		{
+			users = new String[t.executeQuery("SELECT COUNT(*) FROM associations where auth = '"+auth+"'").getInt(1)];
+			rs = t.executeQuery( "select username from associations where auth = '"+auth+"';" );
+	
+			int i = 0;
+		    while ( rs.next() ) {
+		    	users[i] = rs.getString("username");
+		    	i++;
+		    } 
+		} 
+		catch (SQLException e) 
+		{
+			System.out.println("---------------------");
+			System.out.println("ERROR IN SQL COMMAND: ");
+			e.printStackTrace();
+			System.out.println("---------------------");
+			
+		}
+		return users;    
 	}
 	
 	public void printAuth() throws SQLException
