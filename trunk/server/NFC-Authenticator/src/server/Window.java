@@ -1,11 +1,14 @@
 package server;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
+import java.awt.image.BufferedImage;
+import java.util.Hashtable;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,6 +22,13 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 public class Window extends JPanel implements Runnable {
 	
@@ -47,6 +57,9 @@ public class Window extends JPanel implements Runnable {
 	private JScrollPane scrollUsers;
 	private JScrollPane scrollAuthUser;
 	private JScrollPane scrollAuth;
+	
+	private String qrCodeText;
+	
 	
 	private int port;
 	static final int WIDTH = 800;
@@ -138,7 +151,11 @@ public class Window extends JPanel implements Runnable {
         textAuthsUser.setBounds(150, 40, 200, 30);
 
         
+        QRCodeWindow qr = new QRCodeWindow();
+        qr.setBounds(300, 100, 500, 500);
 
+
+        
         panel.add(title);
         panel.add(textUsers);
         panel.add(textAuths);
@@ -152,7 +169,8 @@ public class Window extends JPanel implements Runnable {
         panel.add(addAuthUser);
         panel.add(remAuthUser);
         panel.add(addAuth);
-        panel.add(remAuth);        
+        panel.add(remAuth);    
+        panel.add(qr);
 
         frame.setLocationRelativeTo(null);
         
