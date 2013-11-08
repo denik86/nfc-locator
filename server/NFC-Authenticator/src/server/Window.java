@@ -51,6 +51,7 @@ public class Window extends JPanel implements Runnable {
 	private JButton remAuth;
 	private JButton addAuthUser;
 	private JButton remAuthUser;
+	private JButton genQR;
 	private JList userList;
 	private JList authUserList;
 	private JList authList;
@@ -58,13 +59,17 @@ public class Window extends JPanel implements Runnable {
 	private JScrollPane scrollAuthUser;
 	private JScrollPane scrollAuth;
 	
-	private String qrCodeText;
-	
-	
 	private int port;
-	static final int WIDTH = 800;
-	static final int HEIGHT = 400;
-	
+	static final int WIDTH = 800; // larghezza finestra principale
+	static final int HEIGHT = 400; // altezza finestra principale
+	static final int C1 = 10; // posizione orizzontale prima colonna
+	static final int C2 = 180; // posizione orizzontale seconda colonna
+	static final int C3 = 400; // posizione orizzonatale terza colonna
+	static final int R1 = 50; // posizione orizzontale prima riga
+	static final int R2 = 80; // posizione orizzontale seconda riga
+	static final int R3 = 250; // posizione orizzonatale terza riga
+	static final int SP = 10;
+
 	private boolean isStart;
 	static private Listener ls;
 	static private Thread listener;
@@ -76,7 +81,6 @@ public class Window extends JPanel implements Runnable {
 		isStart = false;
 	}
 
-	
 	public void run () {
 		frame.setSize(WIDTH, HEIGHT);
         JPanel panel = (JPanel) frame.getContentPane();
@@ -84,38 +88,42 @@ public class Window extends JPanel implements Runnable {
         frame.setResizable(false);
         
         title = new JLabel("<html><h3>NFC Locator Server</h3></html>");
-        title.setBounds(10, 10, (WIDTH/2), 20);
+        title.setBounds(C1, 10, (WIDTH/2), 20);
         
         textUsers = new JLabel("<html><i> Users: </i></html> ");
-        textUsers.setBounds(10, 50, 70, 20);  
+        textUsers.setBounds(C1, R1, C2-C1-SP, 20);  
        
         textAuths = new JLabel("<html><i> Authorizations: </i></html> ");
-        textAuths.setBounds(500, 50, 120, 20);
+        textAuths.setBounds(C3, R1, C2-C1-SP, 20);
         
-        start = new JButton("Start Server");
+        start = new JButton("<html><font color=green>Start Server</font>");
         start.setBounds(200, 12, 120, 20);
+        
 
         addUser = new JButton("+");
-        addUser.setBounds(10,280, 45, 20);
+        addUser.setBounds(C1, R3, 45, 20);
         
         remUser = new JButton("-");
-        remUser.setBounds(65,280, 45, 20);
+        remUser.setBounds(C1 + 55, R3, 45, 20);
         
         addAuthUser = new JButton("<html><h5>Add Auth</h5></html>");
-        addAuthUser.setBounds(10,310, 100, 20);
+        addAuthUser.setBounds(C2,R3, 100, 20);
         addAuthUser.setMargin(new Insets(1,1,1,1));
         
         remAuthUser = new JButton("<html><h5>Remove Auth</h5></html>");
-        remAuthUser.setBounds(150,280, 100, 20);
+        remAuthUser.setBounds(C2,R3+30, 100, 20);
         remAuthUser.setMargin(new Insets(1,1,1,1));
         
         addAuth = new JButton("+");
-        addAuth.setBounds(500, 280, 45, 20);
+        addAuth.setBounds(C3, R3, 45, 20);
         addAuth.setMargin(new Insets(1,1,1,1));
         
         remAuth = new JButton("-");
-        remAuth.setBounds(555, 280, 45, 20);
+        remAuth.setBounds(C3 + 55, R3, 45, 20);
         remAuth.setMargin(new Insets(1,1,1,1));
+        
+        genQR = new JButton("<html><h4 color=#46333 align=center>Generate<br>QR Code</h4></html>");
+        genQR.setBounds(C1, R3+30, 100, 40);
   
       
 		userList = new JList(users.getUsers());
@@ -124,7 +132,7 @@ public class Window extends JPanel implements Runnable {
         userList.setSelectedIndex(0);
         userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scrollUsers = new JScrollPane(userList);
-        scrollUsers.setBounds(10, 70, 100, 200);
+        scrollUsers.setBounds(C1, R2, C2-C1-SP, R3-R2-SP);
         
         
         authUserList = new JList(users.getAuthsUsers((String) userList.getSelectedValue()));
@@ -133,7 +141,7 @@ public class Window extends JPanel implements Runnable {
         authUserList.setSelectedIndex(0);
         authUserList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scrollAuthUser = new JScrollPane(authUserList);
-        scrollAuthUser.setBounds(150, 70, 100, 200);
+        scrollAuthUser.setBounds(C2, R2, C3-C2-5*SP, R3-R2-SP);
  
         
         authList = new JList(users.getAuths());
@@ -142,18 +150,13 @@ public class Window extends JPanel implements Runnable {
         authList.setSelectedIndex(0);
         authList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scrollAuth = new JScrollPane(authList);
-        scrollAuth.setBounds(500, 70, 100, 200);
+        scrollAuth.setBounds(C3, R2, C2-C1-SP, R3-R2-SP);
         
         if(userList.getSelectedValue() == null)
         	 textAuthsUser = new JLabel ("<html><i><h5>  No User Selected </h5></i></html> ");
         else
-        	 textAuthsUser = new JLabel ("<html><i><h5> Authorizations of user : <br> <font color=red>"  +  userList.getSelectedValue() + "</font> </h5></i></html> ");
-        textAuthsUser.setBounds(150, 40, 200, 30);
-
-        
-        QRCodeWindow qr = new QRCodeWindow();
-        qr.setBounds(300, 100, 500, 500);
-
+        	 textAuthsUser = new JLabel ("<html><i><h5> Authorizations of user :<br><font size=4 color=red>"  +  userList.getSelectedValue() + "</font> </h5></i></html> ");
+        textAuthsUser.setBounds(C2, R1, C3-C2, 30);
 
         
         panel.add(title);
@@ -169,8 +172,9 @@ public class Window extends JPanel implements Runnable {
         panel.add(addAuthUser);
         panel.add(remAuthUser);
         panel.add(addAuth);
-        panel.add(remAuth);    
-        panel.add(qr);
+        panel.add(remAuth);
+        panel.add(genQR);
+       
 
         frame.setLocationRelativeTo(null);
         
@@ -178,7 +182,7 @@ public class Window extends JPanel implements Runnable {
         	public void valueChanged(ListSelectionEvent e) {
         		
         		String username = (String) userList.getSelectedValue();
-        		textAuthsUser.setText("<html><i><h5> Authorizations of user :<br> <font color=red>"  +  userList.getSelectedValue() + "</font></h5></i></html> ");
+        		textAuthsUser.setText("<html><i><h5> Authorizations of user :<br> <font size=4 color=red>"  +  userList.getSelectedValue() + "</font></h5></i></html> ");
         		authUserList.setListData(users.getAuthsUsers(username));
         	}
         });
@@ -290,14 +294,22 @@ public class Window extends JPanel implements Runnable {
         	}
         });
         
+        genQR.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e)
+        	{
+        		JFrame qr = new JFrame();
+        		qr.setSize(300, 200);
+        		qr.add(new QRCodeWindow("ciao"));
+        		qr.setVisible(true);
+
+        	}
+        });
+        
         frame.setVisible(true);
 	}
 	
 	class WindowAddUser extends JFrame {
 		
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 		private JFrame frame;
 		public WindowAddUser (JFrame fram) {
@@ -441,9 +453,6 @@ public class Window extends JPanel implements Runnable {
 	
 	class WindowAddAuthUser extends JFrame {
 		
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 		private JFrame frame;
 		public WindowAddAuthUser (JFrame fram, final String username) {
