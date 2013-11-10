@@ -85,6 +85,7 @@ void loop() {
           lcd.print("Loading");
           lcd.setCursor(0,1);
           lcd.print("complete");
+          lock.write(90);
           //analogWrite(LED_RED, 0);
           analogWrite(LED_GREEN, 255);
           delay(500);
@@ -134,10 +135,10 @@ void loop() {
             delay(300);
             analogWrite(LED_GREEN, 0);
             // open lock
-            lock.write(180);
-            delay(2000);
-            // close lock
             lock.write(0);
+            delay(4000);
+            // close lock
+            lock.write(90);
             lcd.noDisplay();
             lcd.noBacklight();
          } else {
@@ -164,7 +165,7 @@ void loop() {
             Serial.println(rfid.serNum[3]);
             Serial.println(rfid.serNum[4]);
             //Serial.println("0");
-            delay(2000);
+            delay(4000);
             lcd.noDisplay();
             lcd.noBacklight();
           }
@@ -175,7 +176,8 @@ void loop() {
       if(Serial.available()) {
       delay(100);
       while (Serial.available() > 0) {
-        if(Serial.read() == 'o') {
+        char command = Serial.read();
+        if(command == 'o') {
           // read user
           int i=0;
           while(Serial.available() > 0 && i < 10) {
@@ -197,7 +199,7 @@ void loop() {
           lcd.print("user ");
           int j=0;
           while(j < i) {
-            if((user[j] > 65 && user[j] < 90) || (user[j] > 97 && user[j] < 122))
+            if((user[j] >= 65 && user[j] <= 90) || (user[j] >= 97 && user[j] <= 122))
             lcd.print(user[j]);
             j++;
           }
@@ -213,12 +215,16 @@ void loop() {
           delay(300);
           analogWrite(LED_GREEN, 0);
           // open lock
-          lock.write(180);
-          delay(2000);
-          // close lock
           lock.write(0);
+          delay(4000);
+          // close lock
+          lock.write(90);
           lcd.noDisplay();
           lcd.noBacklight();
+        }
+        if(command == 'c') {
+          // lock the door open
+          lock.write(0);
         }
       }
     }
