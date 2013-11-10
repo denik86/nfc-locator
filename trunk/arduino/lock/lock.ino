@@ -197,6 +197,7 @@ void loop() {
           lcd.print("user ");
           int j=0;
           while(j < i) {
+            if((user[j] > 65 && user[j] < 90) || (user[j] > 97 && user[j] < 122))
             lcd.print(user[j]);
             j++;
           }
