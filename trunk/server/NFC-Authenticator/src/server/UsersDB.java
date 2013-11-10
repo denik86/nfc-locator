@@ -177,6 +177,22 @@ public class UsersDB {
 		}
 		return false;
 	}
+	
+	public String authLocation(String auth) {
+		
+		ResultSet rs;
+		
+		try {
+			rs = t.executeQuery("select * from "+tableAuths+" where resource = '"+auth+"';");
+			if(rs.next())
+				return rs.getString("address");
+			} catch (SQLException e)
+			{
+				System.out.println("ERR :: failed to find the Auth");
+				e.printStackTrace();
+			}
+		return null;
+	}
 
 	public boolean checkAuthUser(String username, String auth)
 	{
