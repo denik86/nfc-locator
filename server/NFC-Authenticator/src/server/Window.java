@@ -298,10 +298,9 @@ public class Window extends JPanel implements Runnable {
         	public void actionPerformed(ActionEvent e)
         	{
         		JFrame qr = new JFrame();
-        		qr.setSize(300, 200);
+        		qr.setSize(240, 260);
         		qr.add(new QRCodeWindow("ciao"));
         		qr.setVisible(true);
-
         	}
         });
         

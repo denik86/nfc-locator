@@ -29,18 +29,18 @@ public class QRCodeWindow extends JPanel {
 	public void paintComponent(Graphics g)
 	{
 		Graphics2D graphics;
-		int matrixWidth = 120;
+		int matrixWidth = 240;
 		Hashtable<EncodeHintType, ErrorCorrectionLevel> hintMap = new Hashtable<EncodeHintType, ErrorCorrectionLevel>();
 		hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
 		QRCodeWriter qr = new QRCodeWriter();
 		BitMatrix bm = null;
 		try {
-			bm = qr.encode(s, BarcodeFormat.QR_CODE, 120, 120);
+			bm = qr.encode(s, BarcodeFormat.QR_CODE, 240, 240);
 		} catch (WriterException e) {
 			e.printStackTrace();
 		}
 
-		BufferedImage image = new BufferedImage(120, 120, BufferedImage.TYPE_INT_RGB);
+		BufferedImage image = new BufferedImage(240, 240, BufferedImage.TYPE_INT_RGB);
 		image.createGraphics();
 		graphics = (Graphics2D) image.getGraphics();
 		graphics.setColor(Color.WHITE);

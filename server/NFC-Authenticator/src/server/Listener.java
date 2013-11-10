@@ -57,7 +57,10 @@ public class Listener implements Runnable {
 							// check auth
 							if (users.checkAuthUser(data[0], data[2])) {
 								//System.out.println("User " + data[0] + " get the access to resource " + data[2]);
-								String[] address = "localhost:9094".split(":"); // TODO users.getAddress(data[2]).split(":");
+								String location = users.authLocation(data[2]);
+								if(location == null || location.split(":").length != 2)
+									throw new IllegalArgumentException();
+								String[] address = location.split(":");
 								try {
 									InetAddress host = InetAddress.getByName(address[0]);
 									Socket resourceSocket = new Socket(host, Integer.parseInt(address[1]));
@@ -71,6 +74,12 @@ public class Listener implements Runnable {
 									resourceOut.close();
 									resourceIn.close();
 									resourceSocket.close();
+									in.close();
+									out.close();
+									clientSocket.close();
+								} catch (IllegalArgumentException e1) {
+									out.println("An error has occurred while connecting with the resource");
+									System.err.println("The location in the auth " + data[2] + "is not valid!");
 									in.close();
 									out.close();
 									clientSocket.close();
