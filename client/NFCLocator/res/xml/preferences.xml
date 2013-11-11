@@ -16,6 +16,7 @@
         	android:defaultValue="www.example.it" />
     	<EditTextPreference 
     	    android:key="pref_port"
+    	    android:inputType="number"
     	    android:title="Server Port"
     	    android:summary="Port of the authentication server"
     	    android:defaultValue="9092"/>
