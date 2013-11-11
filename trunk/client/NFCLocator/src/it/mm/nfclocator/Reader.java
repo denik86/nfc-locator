@@ -85,6 +85,13 @@ public class Reader extends Activity {
 	protected void onStop() {
 		super.onStop();
 		progDial.dismiss();
+		finish();
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		finish();
 	}
 	
 	private String readTag () {
