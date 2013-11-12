@@ -2,6 +2,7 @@ package server;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -9,6 +10,15 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.KeyStore;
+import java.security.Security;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 public class Listener implements Runnable {
 
@@ -38,8 +48,10 @@ public class Listener implements Runnable {
 	
 	public void run () {
 		try {
+			Security.addProvider(new BouncyCastleProvider());
 			System.out.println("Listener thread started");
-			serverSocket = new ServerSocket(port);
+			
+			serverSocket = this.getServerSocket(port, true);
 			while (!stop) {
 				clientSocket = serverSocket.accept();
 				PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), 
@@ -121,6 +133,55 @@ public class Listener implements Runnable {
 			System.out.println("Server socket closed");
 		}
 		
+	}
+	
+	/**
+	 * Return a ServerSocket listening on the specified port. Can be used the SSL.
+	 * @param port to use
+	 * @param secure true if SSL is required
+	 * @return
+	 * @throws IOException
+	 */
+	private ServerSocket getServerSocket(int port, boolean secure) throws IOException {
+		if(secure) {
+			SSLServerSocketFactory ssf = getServerSocketFactory();
+			
+			//metodo statico definito sotto
+			SSLServerSocket server = (SSLServerSocket) ssf.createServerSocket(port);
+			
+			final String[] enabledCipherSuites = { "SSL_DH_anon_WITH_RC4_128_MD5" };
+			server.setEnabledCipherSuites(enabledCipherSuites);
+			return server;
+		} else
+			return new ServerSocket(port);
+	}
+	
+	private static SSLServerSocketFactory getServerSocketFactory()
+	{
+		SSLServerSocketFactory ssf = null;
+		
+		try
+		{
+			SSLContext ctx;
+			KeyManagerFactory kmf;
+			KeyStore ks;
+			char[] passphrase = "ssltestcert".toCharArray();
+			ctx = SSLContext.getInstance("TLS");
+			//TLS: successore di SSL
+			kmf = KeyManagerFactory.getInstance("SunX509");
+			//algoritmo per i certificati
+			ks = KeyStore.getInstance("BKS");
+			//JavaKeyStore: tipo di store usato da keytool
+			ks.load(new FileInputStream("raw/ssltestcert"), passphrase);
+			kmf.init(ks, passphrase);
+			ctx.init(kmf.getKeyManagers(), null, null);
+			ssf = ctx.getServerSocketFactory();
+			
+			return ssf;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 }
