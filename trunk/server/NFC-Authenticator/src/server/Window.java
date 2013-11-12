@@ -1,14 +1,12 @@
 package server;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.util.Hashtable;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -22,13 +20,6 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 public class Window extends JPanel implements Runnable {
 	
@@ -297,10 +288,17 @@ public class Window extends JPanel implements Runnable {
         genQR.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e)
         	{
-        		JFrame qr = new JFrame();
-        		qr.setSize(240, 260);
-        		qr.add(new QRCodeWindow("ciao"));
-        		qr.setVisible(true);
+        		try {
+	        		JFrame qr = new JFrame();
+	        		qr.setSize(240, 260);
+	        		qr.setLocationRelativeTo(null);
+	        		qr.setResizable(false);
+	        		qr.add(new QRCodeWindow("address:"+InetAddress.getLocalHost().getHostAddress()+" port:"+port+ " username:"+userList.getSelectedValue()));
+	        		qr.setVisible(true);
+	        	} catch(UnknownHostException e1){
+	        		e1.printStackTrace();
+	        		
+	        	}
         	}
         });
         
@@ -494,18 +492,5 @@ public class Window extends JPanel implements Runnable {
 		}
 	}
 
-	class Alert extends JFrame
-	{
-		private static final long serialVersionUID = 1L;
-		JFrame frame=new JFrame("Message box appear in JFrame");
-		public Alert(String message)
-		{
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.setSize(400,400);
-			frame.setLocationRelativeTo(null);
-			frame.setVisible(true);
-			
-		}
-	}
 
 }

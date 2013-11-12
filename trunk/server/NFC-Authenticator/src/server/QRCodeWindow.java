@@ -45,8 +45,9 @@ public class QRCodeWindow extends JPanel {
 		graphics = (Graphics2D) image.getGraphics();
 		graphics.setColor(Color.WHITE);
 		graphics.fillRect(0, 0, matrixWidth, matrixWidth);
+		
 
-		graphics.setColor(Color.RED);
+		graphics.setColor(Color.BLACK);
 
 		for (int i = 0; i < matrixWidth; i++) {
 			for (int j = 0; j < matrixWidth; j++) {
@@ -59,4 +60,3 @@ public class QRCodeWindow extends JPanel {
 	}
 
 }
-
