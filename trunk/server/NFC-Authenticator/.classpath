@@ -5,5 +5,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="SQLibs/sqlite-jdbc-3.7.15-M1.jar"/>
 	<classpathentry kind="lib" path="SQLibs/ZXing.jar"/>
+	<classpathentry kind="lib" path="SQLibs/bcprov-ext-jdk15on-1.46.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
