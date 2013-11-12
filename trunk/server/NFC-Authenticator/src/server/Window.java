@@ -289,12 +289,16 @@ public class Window extends JPanel implements Runnable {
         	public void actionPerformed(ActionEvent e)
         	{
         		try {
-	        		JFrame qr = new JFrame();
-	        		qr.setSize(240, 260);
-	        		qr.setLocationRelativeTo(null);
-	        		qr.setResizable(false);
-	        		qr.add(new QRCodeWindow("address:"+InetAddress.getLocalHost().getHostAddress()+" port:"+port+ " username:"+userList.getSelectedValue()));
-	        		qr.setVisible(true);
+        			if(userList.getSelectedValue() == null)
+	        			JOptionPane.showMessageDialog(frame, "No user selected");
+        			else {
+        				JFrame qr = new JFrame();
+        				qr.setSize(240, 260);
+        				qr.setLocationRelativeTo(null);
+        				qr.setResizable(false);
+        				qr.add(new QRCodeWindow("address:"+InetAddress.getLocalHost().getHostAddress()+" port:"+port+ " username:"+userList.getSelectedValue()));
+        				qr.setVisible(true); 
+	        		}
 	        	} catch(UnknownHostException e1){
 	        		e1.printStackTrace();
 	        		
