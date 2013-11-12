@@ -32,6 +32,8 @@ import android.util.Log;
 
 public class Communicator implements Runnable {
 	
+	private final boolean USE_SSL = true; // This should be turned off only for debug purpose
+	
 	private Handler handler;
 	private String address;
 	private String port;
@@ -52,12 +54,10 @@ public class Communicator implements Runnable {
 	
 	public void run() {
 		
-		/*
-		 * The method simpleSocketConnection uses a simple socket to connect to the server,
-		 * and should be used only for debug purpose.
-		 */
-		//this.simpleSocketConnection();
-		this.SSLSocketConnection();
+		if(USE_SSL)
+			this.SSLSocketConnection();
+		else
+			this.simpleSocketConnection();
 	}
 	
 	private void updateConnectionStatus(int code, String status) {
