@@ -70,7 +70,7 @@ public class Reader extends Activity {
 				}
 				
 				// connect to the server
-				Thread connection = new Thread(new Communicator(handler, address, port, user, password, locationString));
+				Thread connection = new Thread(new Communicator(handler, address, port, user, password, locationString, context));
 				connection.start();
 				// TODO check the result and show something to the user (alertDialog)
 				// TODO close the activity
