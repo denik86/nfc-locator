@@ -1,5 +1,8 @@
 package server;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,12 +52,13 @@ public class Window extends JPanel implements Runnable {
 	private JScrollPane scrollUsers;
 	private JScrollPane scrollAuthUser;
 	private JScrollPane scrollAuth;
+	private Aim a = new Aim(100, 100, 20, 20);
 	
 	private int port;
-	static final int WIDTH = 800; // larghezza finestra principale
-	static final int HEIGHT = 400; // altezza finestra principale
+	static final int WIDTH = 650; // larghezza finestra principale
+	static final int HEIGHT = 350; // altezza finestra principale
 	static final int C1 = 10; // posizione orizzontale prima colonna
-	static final int C2 = 180; // posizione orizzontale seconda colonna
+	static final int C2 = 200; // posizione orizzontale seconda colonna
 	static final int C3 = 400; // posizione orizzonatale terza colonna
 	static final int R1 = 50; // posizione orizzontale prima riga
 	static final int R2 = 80; // posizione orizzontale seconda riga
@@ -123,7 +127,7 @@ public class Window extends JPanel implements Runnable {
         userList.setSelectedIndex(0);
         userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scrollUsers = new JScrollPane(userList);
-        scrollUsers.setBounds(C1, R2, C2-C1-SP, R3-R2-SP);
+        scrollUsers.setBounds(C1, R2, C2-C1-SP-20, R3-R2-SP);
         
         
         authUserList = new JList(users.getAuthsUsers((String) userList.getSelectedValue()));
@@ -148,7 +152,9 @@ public class Window extends JPanel implements Runnable {
         else
         	 textAuthsUser = new JLabel ("<html><i><h5> Authorizations of user :<br><font size=4 color=red>"  +  userList.getSelectedValue() + "</font> </h5></i></html> ");
         textAuthsUser.setBounds(C2, R1, C3-C2, 30);
-
+ 
+       a.setBounds(C2-30,R2,30,100);
+       panel.add(a);
         
         panel.add(title);
         panel.add(textUsers);
@@ -156,7 +162,7 @@ public class Window extends JPanel implements Runnable {
         panel.add(textAuthsUser);
         panel.add(scrollAuth);
         panel.add(scrollAuthUser);
-        panel.add(scrollUsers);
+       panel.add(scrollUsers);
         panel.add(start);
         panel.add(addUser);
         panel.add(remUser);
@@ -165,6 +171,9 @@ public class Window extends JPanel implements Runnable {
         panel.add(addAuth);
         panel.add(remAuth);
         panel.add(genQR);
+ 
+        
+        
        
 
         frame.setLocationRelativeTo(null);
@@ -193,7 +202,8 @@ public class Window extends JPanel implements Runnable {
         		{
         			ls.stop();
         			start.setText("Start Server");
-        			isStart = false;
+        			isStart = false		
+        			        ;
         		}
         	}
         });
@@ -309,6 +319,13 @@ public class Window extends JPanel implements Runnable {
         frame.setVisible(true);
 	}
 	
+/*	public void paint(Graphics g)
+	{
+		super.paint(g);
+		setBackground(Color.black);
+		a.paintComponent(g);
+		
+	}*/
 	class WindowAddUser extends JFrame {
 		
 		private static final long serialVersionUID = 1L;
