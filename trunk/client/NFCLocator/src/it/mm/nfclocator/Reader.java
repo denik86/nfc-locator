@@ -21,6 +21,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,7 +54,16 @@ public class Reader extends Activity {
 		TextView location = (TextView) findViewById(R.id.location);
 		// read ndef info
 		locationString = this.readTag();
-		location.setText(locationString);
+		//location.setText(locationString);
+		this.setTitle(locationString);
+		
+		AlphaAnimation  blinkanimation= new AlphaAnimation(1, (float) 0.5); // Change alpha from fully visible to invisible
+		blinkanimation.setDuration(1200); // duration - half a second
+		blinkanimation.setInterpolator(new LinearInterpolator()); // do not alter animation rate
+		blinkanimation.setRepeatCount(Animation.INFINITE); // Repeat animation infinitely
+		blinkanimation.setRepeatMode(Animation.REVERSE);
+		
+		sendButton.setAnimation(blinkanimation);
 		
 		sendButton.setOnClickListener(new OnClickListener() {
 			@Override
