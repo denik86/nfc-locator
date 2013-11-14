@@ -1,11 +1,12 @@
 package server;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Insets;
+import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.InetAddress;
@@ -52,18 +53,20 @@ public class Window extends JPanel implements Runnable {
 	private JScrollPane scrollUsers;
 	private JScrollPane scrollAuthUser;
 	private JScrollPane scrollAuth;
-	private Aim a = new Aim(100, 100, 20, 20);
+	private Aim a;
 	
 	private int port;
-	static final int WIDTH = 650; // larghezza finestra principale
-	static final int HEIGHT = 350; // altezza finestra principale
+	
 	static final int C1 = 10; // posizione orizzontale prima colonna
 	static final int C2 = 200; // posizione orizzontale seconda colonna
 	static final int C3 = 400; // posizione orizzonatale terza colonna
 	static final int R1 = 50; // posizione orizzontale prima riga
 	static final int R2 = 80; // posizione orizzontale seconda riga
-	static final int R3 = 250; // posizione orizzonatale terza riga
+	static final int R3 = 400; // posizione orizzonatale terza riga
 	static final int SP = 10;
+	
+	static final int WIDTH = C3 + 190; // larghezza finestra principale
+	static final int HEIGHT = R3 + 100; // altezza finestra principale
 
 	private boolean isStart;
 	static private Listener ls;
@@ -150,19 +153,20 @@ public class Window extends JPanel implements Runnable {
         if(userList.getSelectedValue() == null)
         	 textAuthsUser = new JLabel ("<html><i><h5>  No User Selected </h5></i></html> ");
         else
-        	 textAuthsUser = new JLabel ("<html><i><h5> Authorizations of user :<br><font size=4 color=red>"  +  userList.getSelectedValue() + "</font> </h5></i></html> ");
+        	 textAuthsUser = new JLabel ("<html><i><h5> Authorizations of user :<br><font size=4 color=red>&nbsp;"  +  userList.getSelectedValue() + "</font> </h5></i></html> ");
         textAuthsUser.setBounds(C2, R1, C3-C2, 30);
  
-       a.setBounds(C2-30,R2,30,100);
-       panel.add(a);
-        
+        a = new Aim(30, 20);
+        a.setBounds(C2-30,R1+20,30,R3);
+       
+        panel.add(a);
         panel.add(title);
         panel.add(textUsers);
         panel.add(textAuths);
         panel.add(textAuthsUser);
         panel.add(scrollAuth);
         panel.add(scrollAuthUser);
-       panel.add(scrollUsers);
+        panel.add(scrollUsers);
         panel.add(start);
         panel.add(addUser);
         panel.add(remUser);
@@ -171,10 +175,6 @@ public class Window extends JPanel implements Runnable {
         panel.add(addAuth);
         panel.add(remAuth);
         panel.add(genQR);
- 
-        
-        
-       
 
         frame.setLocationRelativeTo(null);
         
@@ -182,11 +182,21 @@ public class Window extends JPanel implements Runnable {
         	public void valueChanged(ListSelectionEvent e) {
         		
         		String username = (String) userList.getSelectedValue();
-        		textAuthsUser.setText("<html><i><h5> Authorizations of user :<br> <font size=4 color=red>"  +  userList.getSelectedValue() + "</font></h5></i></html> ");
+        		textAuthsUser.setText("<html><i><h5> Authorizations of user :<br> <font size=4 color=red>&nbsp;"  +  userList.getSelectedValue() + "</font></h5></i></html> ");
         		authUserList.setListData(users.getAuthsUsers(username));
+        		a.move((userList.getSelectedIndex()+1)*20 - scrollUsers.getVerticalScrollBar().getValue() );
+        		a.repaint();
+        		
         	}
         });
-
+        
+        scrollUsers.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+            public void adjustmentValueChanged(AdjustmentEvent ae) {
+            	 a.move((userList.getSelectedIndex()+1)*20 - scrollUsers.getVerticalScrollBar().getValue() );
+            	 a.repaint();
+            }   	
+        });
+        
         start.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		
@@ -303,11 +313,27 @@ public class Window extends JPanel implements Runnable {
 	        			JOptionPane.showMessageDialog(frame, "No user selected");
         			else {
         				JFrame qr = new JFrame();
-        				qr.setSize(240, 260);
+        				JLabel user = new JLabel("<html><h2>&nbsp;"+userList.getSelectedValue()+ "</h2></html>");
+        				
+        				qr.setSize(260, 350);
+        				qr.setBackground(Color.DARK_GRAY);
         				qr.setLocationRelativeTo(null);
         				qr.setResizable(false);
+        				user.setBounds(10, 10, 240, 30);
+        				user.setBackground(Color.white);
+        				
+        				
+        				user.setOpaque(true);
+        				user.setForeground(new Color(23453));
+        				
+        				qr.add(user);
         				qr.add(new QRCodeWindow("address:"+InetAddress.getLocalHost().getHostAddress()+" port:"+port+ " username:"+userList.getSelectedValue()));
         				qr.setVisible(true); 
+        				System.out.println(user.getWidth() + "");
+        				
+        				
+        				
+        				
 	        		}
 	        	} catch(UnknownHostException e1){
 	        		e1.printStackTrace();
@@ -319,13 +345,6 @@ public class Window extends JPanel implements Runnable {
         frame.setVisible(true);
 	}
 	
-/*	public void paint(Graphics g)
-	{
-		super.paint(g);
-		setBackground(Color.black);
-		a.paintComponent(g);
-		
-	}*/
 	class WindowAddUser extends JFrame {
 		
 		private static final long serialVersionUID = 1L;
@@ -364,6 +383,7 @@ public class Window extends JPanel implements Runnable {
 	        frame.setLocationRelativeTo(null);
 	        frame.setVisible(true);
 	        frame.setEnabled(true);
+	        frame.getRootPane().setDefaultButton(addButton);
 	        
 	        addButton.addActionListener(new ActionListener() {
 	        	public void actionPerformed(ActionEvent e)
@@ -436,6 +456,7 @@ public class Window extends JPanel implements Runnable {
 	        frame.setLocationRelativeTo(null);
 	        frame.setVisible(true);
 	        frame.setEnabled(true);
+	        frame.getRootPane().setDefaultButton(addButton);
 	        
 	        addButton.addActionListener(new ActionListener() {
 	        	public void actionPerformed(ActionEvent e)
@@ -497,6 +518,7 @@ public class Window extends JPanel implements Runnable {
 	        frame.setLocationRelativeTo(null);
 	        frame.setVisible(true);
 	        frame.setEnabled(true);
+	        frame.getRootPane().setDefaultButton(addButton);
 	        
 	        addButton.addActionListener(new ActionListener() {
 	        	public void actionPerformed(ActionEvent e)
