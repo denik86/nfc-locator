@@ -35,7 +35,7 @@ public class QRCodeWindow extends JPanel {
 		QRCodeWriter qr = new QRCodeWriter();
 		BitMatrix bm = null;
 		try {
-			bm = qr.encode(s, BarcodeFormat.QR_CODE, 240, 240);
+			bm = qr.encode(s, BarcodeFormat.QR_CODE, matrixWidth, matrixWidth);
 		} catch (WriterException e) {
 			e.printStackTrace();
 		}
@@ -56,7 +56,8 @@ public class QRCodeWindow extends JPanel {
 				}
 			}
 		}
-		g.drawImage(image, 0, 0, this);
+	
+		g.drawImage(image, 10, 50, this);
 	}
 
 }
