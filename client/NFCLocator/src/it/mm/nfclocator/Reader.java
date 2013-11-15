@@ -58,8 +58,12 @@ public class Reader extends Activity {
 		progDial = new ProgressDialog(Reader.this);
 		progDial.setCancelable(false);
 		
-		TextView location = (TextView) findViewById(R.id.location);
+		//TextView location = (TextView) findViewById(R.id.location);
 		ImageView row = (ImageView) findViewById(R.id.row);
+		ImageView text1 = (ImageView) findViewById(R.id.text1);
+		ImageView text2 = (ImageView) findViewById(R.id.text2);
+		ImageView text3 = (ImageView) findViewById(R.id.text3);
+		
 		// read ndef info
 		locationString = this.readTag();
 		//location.setText(locationString);
@@ -95,6 +99,23 @@ public class Reader extends Activity {
 		fadeInRow.setDuration(1000);
 		fadeInRow.setStartOffset(1500);
 		row.setAnimation(fadeInRow);
+		
+		// text animation:
+		Animation fadeInText1 = new AlphaAnimation(0, 1);
+		Animation fadeInText2 = new AlphaAnimation(0, 1);
+		Animation fadeInText3 = new AlphaAnimation(0, 1);
+		fadeInText1.setInterpolator(new LinearInterpolator());
+		fadeInText2.setInterpolator(new LinearInterpolator());
+		fadeInText3.setInterpolator(new LinearInterpolator());
+		fadeInText1.setDuration(1000);
+		fadeInText2.setDuration(1000);
+		fadeInText3.setDuration(1000);
+		fadeInText1.setStartOffset(5000);
+		fadeInText2.setStartOffset(5500);
+		fadeInText3.setStartOffset(6000);
+		text1.setAnimation(fadeInText1);
+		text2.setAnimation(fadeInText2);
+		text3.setAnimation(fadeInText3);
 		
 		sendButton.setOnClickListener(new OnClickListener() {
 			@Override
