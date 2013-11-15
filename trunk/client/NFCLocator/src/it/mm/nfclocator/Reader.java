@@ -23,8 +23,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,11 +40,14 @@ public class Reader extends Activity {
 	private Handler handler;
 	private AlertDialog.Builder builder;
 	private String locationString;
+	
+	private TextView customTitle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_reader);
+		
 		istance = this;
 		context = this.getApplicationContext();
 		handler = new MyHandler();
@@ -52,18 +59,42 @@ public class Reader extends Activity {
 		progDial.setCancelable(false);
 		
 		TextView location = (TextView) findViewById(R.id.location);
+		ImageView row = (ImageView) findViewById(R.id.row);
 		// read ndef info
 		locationString = this.readTag();
 		//location.setText(locationString);
-		this.setTitle(locationString);
+		this.setTitle("                       "+locationString); // TODO find a way to do that in a nicer way
 		
-		AlphaAnimation  blinkanimation= new AlphaAnimation(1, (float) 0.5); // Change alpha from fully visible to invisible
-		blinkanimation.setDuration(1200); // duration - half a second
-		blinkanimation.setInterpolator(new LinearInterpolator()); // do not alter animation rate
-		blinkanimation.setRepeatCount(Animation.INFINITE); // Repeat animation infinitely
+		// sendButton animations:
+		
+		// fade in animation
+		Animation fadeIn = new AlphaAnimation(0, 1);
+		fadeIn.setInterpolator(new LinearInterpolator());
+		fadeIn.setDuration(1000);
+		// scale animation
+		Animation scale = AnimationUtils.loadAnimation(this, R.anim.scale);
+		scale.setInterpolator(new DecelerateInterpolator());
+		// set glow animation for the sendButton
+		AlphaAnimation  blinkanimation= new AlphaAnimation(1, 0.5f);
+		blinkanimation.setDuration(1200);
+		blinkanimation.setInterpolator(new LinearInterpolator());
+		blinkanimation.setRepeatCount(Animation.INFINITE);
 		blinkanimation.setRepeatMode(Animation.REVERSE);
+		// combine the animations
+		AnimationSet animation = new AnimationSet(false); //change to false
+		animation.addAnimation(fadeIn);
+		animation.addAnimation(scale);
+		animation.addAnimation(blinkanimation);
+		// set the the animations
+		sendButton.setAnimation(animation);
 		
-		sendButton.setAnimation(blinkanimation);
+		// row animation:
+		// fade in animation
+		Animation fadeInRow = new AlphaAnimation(0, 1);
+		fadeInRow.setInterpolator(new LinearInterpolator());
+		fadeInRow.setDuration(1000);
+		fadeInRow.setStartOffset(1500);
+		row.setAnimation(fadeInRow);
 		
 		sendButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -85,10 +116,8 @@ public class Reader extends Activity {
 				// connect to the server
 				Thread connection = new Thread(new Communicator(handler, address, port, user, password, locationString, context));
 				connection.start();
-				// TODO check the result and show something to the user (alertDialog)
-				// TODO close the activity
 				
-				sendButton.setEnabled(true);
+				sendButton.setEnabled(true); // TODO maybe false?
 			}
 		});
 		
