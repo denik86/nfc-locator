@@ -30,8 +30,11 @@ public final class R {
         public static final int the_white=0x7f020007;
     }
     public static final class id {
+        public static final int imageView1=0x7f0b0004;
+        public static final int imageView2=0x7f0b0003;
+        public static final int imageView3=0x7f0b0005;
         public static final int location=0x7f0b0000;
-        public static final int menu_settings=0x7f0b0003;
+        public static final int menu_settings=0x7f0b0006;
         public static final int openButton=0x7f0b0001;
         public static final int row=0x7f0b0002;
     }
