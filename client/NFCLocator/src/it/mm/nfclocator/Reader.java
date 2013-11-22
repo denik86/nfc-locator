@@ -67,7 +67,9 @@ public class Reader extends Activity {
 		// read ndef info
 		locationString = this.readTag();
 		//location.setText(locationString);
-		this.setTitle("                       "+locationString); // TODO find a way to do that in a nicer way
+		TextView loc = (TextView) findViewById(R.id.location);
+		loc.setText(locationString);
+		//this.setTitle("                       "+locationString); // TODO find a way to do that in a nicer way
 		
 		// sendButton animations:
 		
