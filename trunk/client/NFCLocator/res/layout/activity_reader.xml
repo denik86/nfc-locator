@@ -1,7 +1,9 @@
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     tools:context=".Reader" >
 
     <TextView
@@ -10,29 +12,19 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="59dp"
+        android:layout_marginTop="30dp"
         android:text=""
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <ImageButton
-        android:id="@+id/openButton"
-        android:layout_width="200dip"
-        android:layout_height="200dip"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/openselector" />
-
-    <ImageView
-        android:id="@+id/row"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/openButton"
-        android:layout_alignLeft="@+id/openButton"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/openButton"
-        android:src="@drawable/freccia" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#5AD2E5"
+        android:background="#363838"
+        
+        android:padding="10sp"
+        android:textSize="40sp" />
+    
+    
 
     <LinearLayout
+        android:id="@+id/linearLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -60,5 +52,22 @@
             android:layout_weight="0.5"
             android:src="@drawable/button_white" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/row"
+        android:layout_width="wrap_content"
+        android:layout_height="250dip"
+        android:layout_below="@+id/location"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="54dp"
+        android:src="@drawable/freccia" />
+
+    <ImageButton
+        android:id="@+id/openButton"
+        android:layout_width="200dip"
+        android:layout_height="200dip"
+        android:layout_alignLeft="@+id/row"
+        android:layout_below="@+id/row"
+        android:background="@drawable/openselector" />
 
 </RelativeLayout>
