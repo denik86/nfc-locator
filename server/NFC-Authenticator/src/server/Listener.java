@@ -40,6 +40,7 @@ public class Listener implements Runnable {
 		this.stop = true;
 		try {
 			serverSocket.close();
+			window.signal(0,null, "## Server Stopped");
 			if(clientSocket != null) {
 				clientSocket.close();
 			}
@@ -53,7 +54,7 @@ public class Listener implements Runnable {
 		try {
 			Security.addProvider(new BouncyCastleProvider());
 			System.out.println("Listener thread started");
-			window.signal(0, "## Server Started");
+			window.signal(0,null, "## Server Started");
 			serverSocket = this.getServerSocket(port, true);
 			while (!stop) {
 				clientSocket = serverSocket.accept();
@@ -69,12 +70,10 @@ public class Listener implements Runnable {
 					if(data.length == 3) {
 						// check username and password
 						if(users.checkUser(data[0], data[1])) {
-							window.signal(0, "User '"+data[0]+"' authenticated");
-							//System.out.println("User " + data[0] + " authenticated");
+							window.signal(0,null, "User '"+data[0]+"' authenticated");
 							// check auth
 							if (users.checkAuthUser(data[0], data[2])) {
-								window.signal(0, "User '"+data[0]+"' request the access to resource '"+data[2]+"'");
-								//System.out.println("User " + data[0] + " get the access to resource " + data[2]);
+								window.signal(0,null, "User '"+data[0]+"' request the access to resource '"+data[2]+"'");
 								String location = users.authLocation(data[2]);
 								
 								try {
@@ -96,7 +95,7 @@ public class Listener implements Runnable {
 									in.close();
 									out.close();
 									clientSocket.close();
-									window.signal(1, data[2]);
+									window.signal(1, data[2], "Access garanted [user: '"+data[0]+"', resource: '"+data[2]+"']");
 								} catch (IllegalArgumentException e1) {
 									out.println("An error has occurred while connecting with the resource");
 									System.err.println("The location in the auth " + data[2] + " is not valid!");
@@ -112,6 +111,7 @@ public class Listener implements Runnable {
 								}
 							} else {
 								out.println("You don't have the authorization to access this resource");
+								window.signal(2, data[2], "Access denied [user: '"+data[0]+"', resource: '"+data[2]+"']");
 								in.close();
 								out.close();
 								clientSocket.close();

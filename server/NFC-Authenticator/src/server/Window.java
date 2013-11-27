@@ -41,7 +41,6 @@ public class Window extends JPanel implements Runnable {
 	private static final long serialVersionUID = 1L;
 
 	JFrame frame;
-	
 	private UsersDB users;
 	private JLabel title;
 	private JLabel textUsers;
@@ -65,6 +64,9 @@ public class Window extends JPanel implements Runnable {
 	private JScrollPane scrollAuth;
 	private JScrollPane scrollLog;
 	private StringBuilder textLog;
+	private JFrame mapFrame;
+	private Map map;
+	
 	
 	private Aim aim;
 	
@@ -92,27 +94,44 @@ public class Window extends JPanel implements Runnable {
 		this.port = port;
 		isStart = false;
 		window = this;
+		map = new Map();
+		mapFrame = new JFrame();
+		mapFrame.setSize(500,500);
+		mapFrame.setLocationRelativeTo(null);
+		mapFrame.setResizable(false);
+		mapFrame.getContentPane().add(map);
+		mapFrame.setVisible(false);
 	}
 	
-	public void signal(int n, String s) throws IOException
+	public void signal(int n, String s, String text) throws IOException
 	{
 		switch(n)
 		{
 			case 0:
-				textLog.append("<font family=arial size=3>"+s+"</font><br>");
+				textLog.append("<font family=arial size=3>"+text+"</font><br>");
 				log.setText(textLog.toString());
 				break;
 			case 1:	
-				textLog.append("<font family=arial size=3>"+s+"</font><br>");
+				textLog.append("<font color=green family=arial size=3>"+text+"</font><br>");
 				log.setText(textLog.toString());
-				
-        		new ShowMap(s);
-				
+				MyTimer t = new MyTimer(s, map, n);
+    			Thread thread = new Thread(t);
+    			thread.start();
+    			mapFrame.setVisible(true);
+    			System.out.println("N" +n);
+    			break;
+			case 2:	
+				textLog.append("<font color=red family=arial size=3>"+text+"</font><br>");
+				log.setText(textLog.toString());
+				MyTimer t2 = new MyTimer(s, map, n);
+    			Thread thread2 = new Thread(t2);
+    			thread2.start();
+    			mapFrame.setVisible(true);
+    			System.out.println("N3" +n);
+    			break;
 		}
 	}
-	
-	
-	
+
 
 	public void run () {
 		frame.setSize(WIDTH, HEIGHT);
@@ -134,7 +153,6 @@ public class Window extends JPanel implements Runnable {
         
         showMap = new JButton("<html><font color=green>Show Map</font>");
         showMap.setBounds(C3+30, 12, 120, 20);
-        
 
         addUser = new JButton("+");
         addUser.setBounds(C1, R3, 45, 20);
@@ -160,7 +178,6 @@ public class Window extends JPanel implements Runnable {
         
         genQR = new JButton("<html><h4 color=#46333 align=center>Generate<br>QR Code</h4></html>");
         genQR.setBounds(C1, R3+30, 100, 40);
-  
       
 		userList = new JList(users.getUsers());
         userList.setFixedCellWidth(20);
@@ -170,7 +187,6 @@ public class Window extends JPanel implements Runnable {
         scrollUsers = new JScrollPane(userList);
         scrollUsers.setBounds(C1, R2, C2-C1-SP-20, R3-R2-SP);
         
-        
         authUserList = new JList(users.getAuthsUsers((String) userList.getSelectedValue()));
         authUserList.setFixedCellWidth(20);
         authUserList.setFixedCellHeight(20);
@@ -178,7 +194,6 @@ public class Window extends JPanel implements Runnable {
         authUserList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scrollAuthUser = new JScrollPane(authUserList);
         scrollAuthUser.setBounds(C2, R2, C3-C2-5*SP, R3-R2-SP);
- 
         
         authList = new JList(users.getAuths());
         authList.setFixedCellWidth(20);
@@ -223,11 +238,9 @@ public class Window extends JPanel implements Runnable {
         panel.add(genQR);
         panel.add(scrollLog);
 
+        frame.setVisible(true);
         frame.setLocationRelativeTo(null);
-        
-       
-        
-        
+
         userList.addListSelectionListener(new ListSelectionListener() {
         	public void valueChanged(ListSelectionEvent e) {
         		
@@ -257,6 +270,7 @@ public class Window extends JPanel implements Runnable {
         			listener.start();
         			start.setText("Stop Server");
         			isStart = true;
+        					
         		}
         		else
         		{
@@ -270,19 +284,11 @@ public class Window extends JPanel implements Runnable {
         
         showMap.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		
-        		new ShowMap("");
-    	        frame.addWindowListener(new WindowAdapter() {
-    		        @Override
-    		        public void windowClosing(WindowEvent e) {
-    		        	frame.setVisible(false);
-    		            System.exit(0);
-    		        }
-    	        });
-        	}
-        		
-        });
-        
+        		mapFrame.setVisible(true);
+    		}
+        	
+    	});
+    
         addUser.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		JFrame add = new JFrame("Insert a new User");
@@ -403,9 +409,6 @@ public class Window extends JPanel implements Runnable {
 	        	}
         	}
         });
-        
-        frame.setVisible(true);
-        new ShowMap("Office 2");
 	}
 	
 	class WindowAddUser extends JFrame {
@@ -598,4 +601,32 @@ public class Window extends JPanel implements Runnable {
 		}
 	}
 	
+	class Timer implements Runnable
+	{
+		private String place;
+		public Timer(String s)
+		{
+			place = s;
+		}
+		public void run()
+		{
+			try
+			{
+				map.setOn(place);
+				Thread.currentThread().sleep(500L);
+				map.setOff(place);
+				Thread.currentThread().sleep(500L);
+				map.setOn(place);
+				Thread.currentThread().sleep(500L);
+				map.setOff(place);
+				Thread.currentThread().sleep(500L);
+				map.setOn(place);
+				Thread.currentThread().sleep(500L);
+				map.setOff(place);
+
+			} catch(InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}		
 }
