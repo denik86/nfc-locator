@@ -1,17 +1,23 @@
 package server;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Insets;
-import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -21,7 +27,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.RootPaneContainer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -47,13 +55,18 @@ public class Window extends JPanel implements Runnable {
 	private JButton addAuthUser;
 	private JButton remAuthUser;
 	private JButton genQR;
+	private JButton showMap;
 	private JList userList;
 	private JList authUserList;
 	private JList authList;
+	private JTextPane log;
 	private JScrollPane scrollUsers;
 	private JScrollPane scrollAuthUser;
 	private JScrollPane scrollAuth;
-	private Aim a;
+	private JScrollPane scrollLog;
+	private StringBuilder textLog;
+	
+	private Aim aim;
 	
 	private int port;
 	
@@ -66,18 +79,40 @@ public class Window extends JPanel implements Runnable {
 	static final int SP = 10;
 	
 	static final int WIDTH = C3 + 190; // larghezza finestra principale
-	static final int HEIGHT = R3 + 100; // altezza finestra principale
+	static final int HEIGHT = R3 + 200; // altezza finestra principale
 
 	private boolean isStart;
 	static private Listener ls;
 	static private Thread listener;
+	static private Window window;
 	
 	public Window (JFrame frame, UsersDB users, int port) {
 		this.frame = frame;
 		this.users = users;
 		this.port = port;
 		isStart = false;
+		window = this;
 	}
+	
+	public void signal(int n, String s) throws IOException
+	{
+		switch(n)
+		{
+			case 0:
+				textLog.append("<font family=arial size=3>"+s+"</font><br>");
+				log.setText(textLog.toString());
+				break;
+			case 1:	
+				textLog.append("<font family=arial size=3>"+s+"</font><br>");
+				log.setText(textLog.toString());
+				
+        		new ShowMap(s);
+				
+		}
+	}
+	
+	
+	
 
 	public void run () {
 		frame.setSize(WIDTH, HEIGHT);
@@ -96,6 +131,9 @@ public class Window extends JPanel implements Runnable {
         
         start = new JButton("<html><font color=green>Start Server</font>");
         start.setBounds(200, 12, 120, 20);
+        
+        showMap = new JButton("<html><font color=green>Show Map</font>");
+        showMap.setBounds(C3+30, 12, 120, 20);
         
 
         addUser = new JButton("+");
@@ -156,10 +194,17 @@ public class Window extends JPanel implements Runnable {
         	 textAuthsUser = new JLabel ("<html><i><h5> Authorizations of user :<br><font size=4 color=red>&nbsp;"  +  userList.getSelectedValue() + "</font> </h5></i></html> ");
         textAuthsUser.setBounds(C2, R1, C3-C2, 30);
  
-        a = new Aim(30, 20);
-        a.setBounds(C2-30,R1+20,30,R3);
+        aim = new Aim(30, 20);
+        aim.setBounds(C2-30,R1+20,30,R3);
+        
+        textLog = new StringBuilder();
+        log = new JTextPane();
+        log.setEditable(false);
+        log.setContentType("text/html");
+        scrollLog = new JScrollPane(log);
+        scrollLog.setBounds(C1, R3+90, 500, 100);
        
-        panel.add(a);
+        panel.add(aim);
         panel.add(title);
         panel.add(textUsers);
         panel.add(textAuths);
@@ -168,6 +213,7 @@ public class Window extends JPanel implements Runnable {
         panel.add(scrollAuthUser);
         panel.add(scrollUsers);
         panel.add(start);
+        panel.add(showMap);
         panel.add(addUser);
         panel.add(remUser);
         panel.add(addAuthUser);
@@ -175,8 +221,12 @@ public class Window extends JPanel implements Runnable {
         panel.add(addAuth);
         panel.add(remAuth);
         panel.add(genQR);
+        panel.add(scrollLog);
 
         frame.setLocationRelativeTo(null);
+        
+       
+        
         
         userList.addListSelectionListener(new ListSelectionListener() {
         	public void valueChanged(ListSelectionEvent e) {
@@ -184,16 +234,16 @@ public class Window extends JPanel implements Runnable {
         		String username = (String) userList.getSelectedValue();
         		textAuthsUser.setText("<html><i><h5> Authorizations of user :<br> <font size=4 color=red>&nbsp;"  +  userList.getSelectedValue() + "</font></h5></i></html> ");
         		authUserList.setListData(users.getAuthsUsers(username));
-        		a.move((userList.getSelectedIndex()+1)*20 - scrollUsers.getVerticalScrollBar().getValue() );
-        		a.repaint();
+        		aim.move((userList.getSelectedIndex()+1)*20 - scrollUsers.getVerticalScrollBar().getValue() );
+        		aim.repaint();
         		
         	}
         });
         
         scrollUsers.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
             public void adjustmentValueChanged(AdjustmentEvent ae) {
-            	 a.move((userList.getSelectedIndex()+1)*20 - scrollUsers.getVerticalScrollBar().getValue() );
-            	 a.repaint();
+            	 aim.move((userList.getSelectedIndex()+1)*20 - scrollUsers.getVerticalScrollBar().getValue() );
+            	 aim.repaint();
             }   	
         });
         
@@ -202,7 +252,7 @@ public class Window extends JPanel implements Runnable {
         		
         		if(!isStart)
         		{
-        			ls = new Listener(port, users);
+        			ls = new Listener(port, users, window);
         			listener = new Thread(ls);
         			listener.start();
         			start.setText("Stop Server");
@@ -216,6 +266,21 @@ public class Window extends JPanel implements Runnable {
         			        ;
         		}
         	}
+        });
+        
+        showMap.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		
+        		new ShowMap("");
+    	        frame.addWindowListener(new WindowAdapter() {
+    		        @Override
+    		        public void windowClosing(WindowEvent e) {
+    		        	frame.setVisible(false);
+    		            System.exit(0);
+    		        }
+    	        });
+        	}
+        		
         });
         
         addUser.addActionListener(new ActionListener() {
@@ -330,10 +395,7 @@ public class Window extends JPanel implements Runnable {
         				qr.add(new QRCodeWindow("address:"+InetAddress.getLocalHost().getHostAddress()+" port:"+port+ " username:"+userList.getSelectedValue()));
         				qr.setVisible(true); 
         				System.out.println(user.getWidth() + "");
-        				
-        				
-        				
-        				
+ 
 	        		}
 	        	} catch(UnknownHostException e1){
 	        		e1.printStackTrace();
@@ -343,6 +405,7 @@ public class Window extends JPanel implements Runnable {
         });
         
         frame.setVisible(true);
+        new ShowMap("Office 2");
 	}
 	
 	class WindowAddUser extends JFrame {
@@ -534,6 +597,5 @@ public class Window extends JPanel implements Runnable {
 
 		}
 	}
-
-
+	
 }
