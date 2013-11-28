@@ -110,24 +110,25 @@ public class Window extends JPanel implements Runnable {
 			case 0:
 				textLog.append("<font family=arial size=3>"+text+"</font><br>");
 				log.setText(textLog.toString());
+				log.setCaretPosition(log.getDocument().getLength());
 				break;
 			case 1:	
 				textLog.append("<font color=green family=arial size=3>"+text+"</font><br>");
 				log.setText(textLog.toString());
-				MyTimer t = new MyTimer(s, map, n);
+				log.setCaretPosition(log.getDocument().getLength());
+				Timer t = new Timer(s, n);
     			Thread thread = new Thread(t);
     			thread.start();
     			mapFrame.setVisible(true);
-    			System.out.println("N" +n);
     			break;
 			case 2:	
 				textLog.append("<font color=red family=arial size=3>"+text+"</font><br>");
 				log.setText(textLog.toString());
-				MyTimer t2 = new MyTimer(s, map, n);
+				log.setCaretPosition(log.getDocument().getLength());
+				Timer t2 = new Timer(s, n);
     			Thread thread2 = new Thread(t2);
     			thread2.start();
     			mapFrame.setVisible(true);
-    			System.out.println("N3" +n);
     			break;
 		}
 	}
@@ -604,9 +605,11 @@ public class Window extends JPanel implements Runnable {
 	class Timer implements Runnable
 	{
 		private String place;
-		public Timer(String s)
+		
+		public Timer(String s, int n)
 		{
 			place = s;
+			map.color = n;
 		}
 		public void run()
 		{
@@ -627,6 +630,8 @@ public class Window extends JPanel implements Runnable {
 			} catch(InterruptedException e) {
 				e.printStackTrace();
 			}
+			
+			
 		}
 	}		
 }
