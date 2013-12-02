@@ -47,7 +47,6 @@ public class Listener implements Runnable {
 		} catch (IOException e) {
 			System.out.println("Listener thread closed");
 		}
-		
 	}
 	
 	public void run () {
@@ -57,10 +56,8 @@ public class Listener implements Runnable {
 			window.signal(0,null, "## Server Started");
 			serverSocket = this.getServerSocket(port, true);
 			while (!stop) {
-				clientSocket = serverSocket.accept();
-				
-				PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), 
-	                    true); 
+				clientSocket = serverSocket.accept();	
+				PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true); 
 				BufferedReader in = new BufferedReader(new InputStreamReader( clientSocket.getInputStream()));
 				String inputLine;
 				inputLine = in.readLine();
@@ -154,7 +151,6 @@ public class Listener implements Runnable {
 		if(secure) {
 			SSLServerSocketFactory ssf = getServerSocketFactory();
 			
-			//metodo statico definito sotto
 			SSLServerSocket server = (SSLServerSocket) ssf.createServerSocket(port);
 			
 			final String[] enabledCipherSuites = { "SSL_DH_anon_WITH_RC4_128_MD5" };
@@ -168,23 +164,18 @@ public class Listener implements Runnable {
 	{
 		SSLServerSocketFactory ssf = null;
 		
-		try
-		{
+		try {
 			SSLContext ctx;
 			KeyManagerFactory kmf;
 			KeyStore ks;
 			char[] passphrase = "ssltestcert".toCharArray();
 			ctx = SSLContext.getInstance("TLS");
-			//TLS: successore di SSL
 			kmf = KeyManagerFactory.getInstance("SunX509");
-			//algoritmo per i certificati
 			ks = KeyStore.getInstance("BKS");
-			//JavaKeyStore: tipo di store usato da keytool
 			ks.load(new FileInputStream("raw/ssltestcert"), passphrase);
 			kmf.init(ks, passphrase);
 			ctx.init(kmf.getKeyManagers(), null, null);
 			ssf = ctx.getServerSocketFactory();
-			
 			return ssf;
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -2,22 +2,16 @@ package server;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -25,11 +19,12 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.RootPaneContainer;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -292,17 +287,46 @@ public class Window extends JPanel implements Runnable {
     
         addUser.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		JFrame add = new JFrame("Insert a new User");
-        		new WindowAddUser(add);
-    	        frame.addWindowListener(new WindowAdapter() {
-    		        @Override
-    		        public void windowClosing(WindowEvent e) {
-    		        	frame.setVisible(false);
-    		            System.exit(0);
-    		        }
-    	        });
-        	}
         		
+        	       	JPanel p = new JPanel(new BorderLayout(5,5));
+        	        JPanel labels = new JPanel(new GridLayout(0,1,2,2));
+        	        labels.add(new JLabel("User Name", SwingConstants.RIGHT));
+        	        labels.add(new JLabel("Password", SwingConstants.RIGHT));
+        	        p.add(labels ,BorderLayout.WEST);
+
+        	        JPanel controls = new JPanel(new GridLayout(0,1,2,2));
+        	        JTextField username = new JTextField();
+        	        controls.add(username);
+        	        JPasswordField password = new JPasswordField();
+        	        controls.add(password);
+        	        p.add(controls, BorderLayout.CENTER);
+        	        
+        	        boolean done = false;
+        	        while(!done) {
+        	        	int n = JOptionPane.showConfirmDialog(frame, p, "Add new user", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        	        	System.out.println(""+n);
+        	        	if(n == 0) {
+	        	        	if(username.getText().equals("")) {
+	        	        		JOptionPane.showMessageDialog(frame, "Username field is empty");
+	        	        	}
+	        	        	else if(password.getText().equals("")) {
+	        	        		JOptionPane.showMessageDialog(frame, "Password field is empty");
+	        	        	}
+	        	        	else if(username.getText().length() > 10) {
+	        	        		JOptionPane.showMessageDialog(frame, "Username is longer than 10 characters");
+	        	        	}
+			        		else
+			        		{
+			        			users.addUser(username.getText(), password.getText());
+			        			userList.setListData(users.getUsers());
+				        		userList.setSelectedIndex(userList.getLastVisibleIndex());
+				        		done = true;
+			        		}
+        	        	}
+        	        	else
+        	        		done = true;
+        	        }
+        	}	
         });
         
         remUser.addActionListener(new ActionListener() {
@@ -318,7 +342,6 @@ public class Window extends JPanel implements Runnable {
 	        		userList.setSelectedIndex(userList.getLastVisibleIndex());
 	        		if(userList.getSelectedValue() == null)
 	        			textAuthsUser.setText("<html><i><h5>  No User Selected </h5></i></html> ");
-	        			
         		}
         	}
         });
@@ -326,8 +349,41 @@ public class Window extends JPanel implements Runnable {
         addAuth.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e)
         	{
-        		JFrame newAuth = new JFrame("Add an Authorization");
-        		new WindowAddAuth(newAuth);
+        		JPanel p = new JPanel(new BorderLayout(5,5));
+    	        JPanel labels = new JPanel(new GridLayout(0,1,2,2));
+    	        labels.add(new JLabel("Resource Name", SwingConstants.RIGHT));
+    	        labels.add(new JLabel("Address", SwingConstants.RIGHT));
+    	        p.add(labels ,BorderLayout.WEST);
+
+    	        JPanel controls = new JPanel(new GridLayout(0,1,2,2));
+    	        JTextField resource = new JTextField();
+    	        controls.add(resource);
+    	        JPasswordField address = new JPasswordField();
+    	        controls.add(address);
+    	        p.add(controls, BorderLayout.CENTER);
+    	        
+    	        boolean done = false;
+    	        while(!done) {
+    	        	int n = JOptionPane.showConfirmDialog(frame, p, "Add new Authorization", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+    	        	System.out.println(""+n);
+    	        	if(n == 0) {
+        	        	if(resource.getText().equals("")) {
+        	        		JOptionPane.showMessageDialog(frame, "Resource Name field is empty");
+        	        	}
+        	        	else if(address.getText().equals("")) {
+        	        		JOptionPane.showMessageDialog(frame, "Address field is empty");
+        	        	}
+		        		else
+		        		{
+		        			users.addAuth(resource.getText(), address.getText());
+			        		authList.setListData(users.getAuths());
+			        		System.out.println("-- Authorization '" + resource.getText() + " ADDED");	
+			        		done = true;
+		        		}
+    	        	}
+    	        	else
+    	        		done = true;
+    	        }
         	}
         });
         
@@ -393,8 +449,6 @@ public class Window extends JPanel implements Runnable {
         				qr.setResizable(false);
         				user.setBounds(10, 10, 240, 30);
         				user.setBackground(Color.white);
-        				
-        				
         				user.setOpaque(true);
         				user.setForeground(new Color(23453));
         				
@@ -406,155 +460,9 @@ public class Window extends JPanel implements Runnable {
 	        		}
 	        	} catch(UnknownHostException e1){
 	        		e1.printStackTrace();
-	        		
 	        	}
         	}
         });
-	}
-	
-	class WindowAddUser extends JFrame {
-		
-		private static final long serialVersionUID = 1L;
-		private JFrame frame;
-		public WindowAddUser (JFrame fram) {
-
-			this.frame = fram;
-			frame.setSize(330, 120);
-			frame.setResizable(false);
-	        JPanel panel = (JPanel) frame.getContentPane();
-	        panel.setLayout(null);
-	        JLabel labelUsername = new JLabel("Username:");
-	        final JTextField textUsername = new JTextField();
-	        JLabel labelPassword = new JLabel("Password:");
-	        final JTextField textPassword = new JTextField();
-	        JLabel labelNotice = new JLabel("<html><h5><font color = red>Username must be long max 10 characters</font></h5></html>");
-	        final JButton addButton = new JButton("Ok");
-	        final JButton cancelButton = new JButton("Cancel");
-	        
-	        labelUsername.setBounds(10, 10, 100, 20);
-	        textUsername.setBounds(90, 10, 200, 20);
-	        labelPassword.setBounds(10, 60, 100, 20);
-	        textPassword.setBounds(90, 60, 200, 20);
-	        labelNotice.setBounds(10, 30, 300, 20);
-	        addButton.setBounds(50, 90 , 100, 20);
-	        cancelButton.setBounds(160, 90 , 100, 20);
-
-	        panel.add(labelUsername);
-	        panel.add(textUsername);
-	        panel.add(labelPassword);
-	        panel.add(textPassword);
-	        panel.add(addButton);
-	        panel.add(cancelButton);
-	        panel.add(labelNotice);
-	        
-	        frame.setLocationRelativeTo(null);
-	        frame.setVisible(true);
-	        frame.setEnabled(true);
-	        frame.getRootPane().setDefaultButton(addButton);
-	        
-	        addButton.addActionListener(new ActionListener() {
-	        	public void actionPerformed(ActionEvent e)
-	        	{
-	        		if(textUsername.getText().equals(""))
-	        			JOptionPane.showMessageDialog(frame, "Username field is empty");
-	        		else if(textPassword.getText().equals(""))
-        				JOptionPane.showMessageDialog(frame, "Password field is empty");
-	        		else if(textUsername.getText().length() > 10)
-        				JOptionPane.showMessageDialog(frame, "Username is longer than 10 characters");
-	        		else
-	        		{
-	        			users.addUser(textUsername.getText(), textPassword.getText());
-	        			userList.setListData(users.getUsers());
-		        		frame.setEnabled(false);
-		        		frame.setVisible(false);
-		        		userList.setSelectedIndex(userList.getLastVisibleIndex());
-
-	        		}
-	        	}
-	        });
-	        
-	        cancelButton.addActionListener(new ActionListener() {
-	        	public void actionPerformed(ActionEvent e)
-	        	{
-	        		frame.setEnabled(false);
-	        		frame.setVisible(false);
-	        	}
-	        });
-	        
-	        
-		}
-	}
-	
-	class WindowAddAuth extends JFrame {
-		
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-		private JFrame frame;
-		public WindowAddAuth (JFrame fram) {
-
-			this.frame = fram;
-			frame.setSize(330, 120);
-			frame.setResizable(false);
-	        JPanel panel = (JPanel) frame.getContentPane();
-	        panel.setLayout(null);
-	        JLabel labelResource = new JLabel("Resource: ");
-	        JLabel labelAddress = new JLabel("Address: ");
-	        final JTextField textResource = new JTextField();
-	        final JTextField textAddress = new JTextField();
-	        final JButton addButton = new JButton("Add");
-	        final JButton cancelButton = new JButton("Cancel");
-	        
-	        labelResource.setBounds(10, 10, 100, 20);
-	        textResource.setBounds(90, 10, 200, 20);
-	        labelAddress.setBounds(10, 30, 100, 20);
-	        textAddress.setBounds(90, 30, 200, 20);
-	        addButton.setBounds(50, 60 , 100, 20);
-	        cancelButton.setBounds(160, 60 , 100, 20);
-
-	        panel.add(labelResource);
-	        panel.add(textResource);
-	        panel.add(labelAddress);
-	        panel.add(textAddress);
-	        panel.add(addButton);
-	        panel.add(cancelButton);
-	        
-	        frame.setLocationRelativeTo(null);
-	        frame.setVisible(true);
-	        frame.setEnabled(true);
-	        frame.getRootPane().setDefaultButton(addButton);
-	        
-	        addButton.addActionListener(new ActionListener() {
-	        	public void actionPerformed(ActionEvent e)
-	        	{
-	        		if(textResource.getText().equals(""))
-	        			JOptionPane.showMessageDialog(frame, "Resource field is empty");
-	        		else if(textAddress.getText().equals(""))
-        				JOptionPane.showMessageDialog(frame, "Address field is empty");
-	        		else
-	        		{
-		        		users.addAuth(textResource.getText(), textAddress.getText());
-		        		authList.setListData(users.getAuths());
-		        		
-		        		frame.setEnabled(false);
-		        		frame.setVisible(false);
-		        		System.out.println("-- Authorization '" + textResource.getText() + " ADDED");
-		        		
-	        		}
-	        	}
-	     
-	        });
-	        
-	        cancelButton.addActionListener(new ActionListener() {
-	        	public void actionPerformed(ActionEvent e)
-	        	{
-	        		frame.setEnabled(false);
-	        		frame.setVisible(false);
-	        	}
-	        });
-
-		}
 	}
 	
 	class WindowAddAuthUser extends JFrame {
@@ -572,13 +480,9 @@ public class Window extends JPanel implements Runnable {
 	        panel.setLayout(null);
 	        JLabel labelAuth = new JLabel("<html>Authorization for <font color = red>" + username +"</font>:<html>");
 	        final JButton addButton = new JButton("Add");
-	        
 	        labelAuth.setBounds(10, 20, 300, 20);
-	       
 	        addButton.setBounds(200, 50 , 70, 20);
-
 	        panel.add(labelAuth);
-	      
 	        panel.add(addButton);
 	        panel.add(auths);
 	        
@@ -598,7 +502,6 @@ public class Window extends JPanel implements Runnable {
 	        		System.out.println("-- Authorization '" + auths.getSelectedItem() + "' ADDED at user " + username);
 	        	}
 	        });
-
 		}
 	}
 	
@@ -630,8 +533,6 @@ public class Window extends JPanel implements Runnable {
 			} catch(InterruptedException e) {
 				e.printStackTrace();
 			}
-			
-			
 		}
 	}		
 }

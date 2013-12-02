@@ -29,17 +29,16 @@ public class Main {
 			}
 		}
 		
+		// load the database
 		UsersDB db = new UsersDB("provaDB", "users", "auth");
 		
-		
-		
+		// create the main window
 		final JFrame frame = new JFrame("NFC Locator Server");
 		win = new Window(frame, db, port);
 		frame.addWindowListener(new WindowAdapter() {
 		
 		@Override
 		public void windowClosing(WindowEvent e) {
-		       // win.stop();
 		        frame.setVisible(false);
 		        try {
 		                Thread.currentThread().sleep(2000);
@@ -49,19 +48,10 @@ public class Main {
 		        System.exit(0);
 		}
 		});
+		
+		// start window
 		Thread window = new Thread(win);
 		window.start();
-		
-		//Listener ls = new Listener(port);
-		//Thread listener = new Thread(ls);
-		//listener.start();
-		
-		// PROVA
-		//Listener runnableAscolto = new Listener(9092);
-		//Thread threadAscolto = new Thread(runnableAscolto);
-		//threadAscolto.start();
-		
-		
 	}
 
 }
