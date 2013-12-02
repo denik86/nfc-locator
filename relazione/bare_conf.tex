@@ -362,17 +362,17 @@
 %
 % paper title
 % can use linebreaks \\ within to get better formatting as desired
-\title{NFCLocator, ...}
+\title{NFAuthenticator: the key is your phone}
 
 
 % author names and affiliations
 % use a multiple column layout for up to three different
 % affiliations
-\author{\IEEEauthorblockN{Daniele Ranzani}
+\author{\IEEEauthorblockN{Daniele Ronzani}
 \IEEEauthorblockA{Department of Pure and Applied Mathematics\\
 University of Padua\\
 Padua, Italy\\
-email qui}
+daniele.ronzani@gmail.com}
 \and
 \IEEEauthorblockN{Michele Massaro}
 \IEEEauthorblockA{Department of Pure and Applied Mathematics\\
@@ -571,7 +571,7 @@ the graphics part is characterized by a window with three main areas:
 \end{itemize}
 
 An element can be added or removed to the user list through the buttons at the bottom. The same applies to the other two lists.
-Through the “Generate QR Code” button can be created a QR code to automatically configure the client of the selected user.
+Through the ``Generate QR Code'' button can be created a QR code to automatically configure the client of the selected user.
 
 The "Start Server" button starts the listener server to accept requests. From that moment on, every client can connect to the server.
 
@@ -603,7 +603,7 @@ Database has been designed with ER diagram shown in Figure 6.
 
 The resource was built to be much similar as possible to a lock. To realize it was used an Arduino Uno r3, programmed to reflect the behaviour of a remotely controlled lock, so there is a small motor that move the closing cylinder and a display that show the state when necessary.
 The connection to the server is provided by an ethernet interface, that allow the exchange of packets between them. 
-Inside the lock there is an NFC tag, that contains the identification of the resource, needed to be recognised by the server. The tag used is a “NTAG203”, that contains up to 137 byte of payload.
+Inside the lock there is an NFC tag, that contains the identification of the resource, needed to be recognised by the server. The tag used is a ``NTAG203'', that contains up to 137 byte of payload.
 To preserve the compatibility with cards that are often used now, have been added an RFID reader, also usable in case of emergency or if there are network issues.
 
 \subsection{Security}
@@ -612,8 +612,21 @@ This system was proposed to replace NFC tags, so will be done a comparison betwe
 Tags are passive objects, that can be used even by not authorized users in case of loss. The advantage on the use of a smartphone as user interface is given by the possibility to use a password to unlock it, so it add an obstacle to a possible thief.
 A second problem of the tags is that they can be read by every reader, even if the tag is not used. For that reason most tag contains encrypted information, or use more sophisticated ways to avoid man in the middle attack [1].
 In the proposed system, the smartphone is the reader, and the only passive entity is the resource, that contains not sensible information (the ID is meaningless outside the system). Moreover, every Android phone turn off the NFC antenna when the screen is locked, preventing possible security issues.
-An essential point of the system is represented by the connection between the client and the server, where are exchanged sensible information. For this reason, the connection have been encrypted using the TLS protocol; the client contains a certificate that allow to authenticate the server identity, preventing “man in the middle” attacks.
+An essential point of the system is represented by the connection between the client and the server, where are exchanged sensible information. For this reason, the connection have been encrypted using the TLS protocol; the client contains a certificate that allow to authenticate the server identity, preventing ``man in the middle'' attacks.
 
+\section{Performance}
+
+The system is made to be used very often, so it doesn’t just need to be easy to use, but it must be fast to not annoy users. For this reason have been done tests on the reactivity of the system, and the result are shown of the graph on the Figure 7.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.3]{fig7}
+\caption{Performance graph}
+\label{fig_sim}
+\end{figure}
+
+In more than 50\% of the measurements the client complete the communication process in less than 400 ms.  Sometimes the time can be greater because of network congestions, but the procedure never spends more than a couple of seconds. 
+Overall the mean of access time should be lower than the classical approach, because the user doesn’t need to search the NFC card inside the wallet, but have to use his smartphone, that usually is in handy.
 
 % An example of a floating figure using the graphicx package.
 % Note that \label must occur AFTER (or within) \caption.
@@ -736,11 +749,22 @@ This work has been presented as an alternative to actual NFC authentication syst
 % (used to reserve space for the reference number labels box)
 \begin{thebibliography}{1}
 
-\bibitem{IEEEhowto:kopka}
+\bibitem{paper1}
 Yun-Seok Lee, Eun Kim, and Min-Soo Jung, \emph{A NFC based Authentication method for defense 
-of the Man in the Middle Attack}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Bali, Indonesia: ICCSIT'2013.
-
+of the Man in the Middle Attack}, \hskip 1em plus
+0.5em minus 0.4em\relax Bali, Indonesia: ICCSIT'2013. 
+\bibitem{paper2}
+Pr Pascal Urien, \emph{NFC Technologies for the Internet Of Things}, \hskip 1em plus
+0.5em minus 0.4em\relax 2013.
+\bibitem{paper3}
+Ernst Haselsteiner and Klemens Breitfuß, \emph{Security in Near Field Communication (NFC),Strengths and Weaknesses}, \hskip 1em plus
+0.5em minus 0.4em\relax .
+\bibitem{paper4}
+Gauthier Van Damme and Karel Wouters, \emph{Practical Experiences with NFC Security on mobile Phones}, \hskip 1em plus
+0.5em minus 0.4em\relax 2009.
+\bibitem{paper5}
+W. Chen, G.P. Hancke and K.E. Mayes, Y. Lien, J-H. Chiu, \emph{NFC Mobile Transactions and Authentication based on GSM Network}, \hskip 1em plus
+0.5em minus 0.4em\relax 2010.
 \end{thebibliography}
 
 
