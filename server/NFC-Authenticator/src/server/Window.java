@@ -30,9 +30,6 @@ import javax.swing.event.ListSelectionListener;
 
 public class Window extends JPanel implements Runnable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	JFrame frame;
@@ -61,7 +58,6 @@ public class Window extends JPanel implements Runnable {
 	private StringBuilder textLog;
 	private JFrame mapFrame;
 	private Map map;
-	
 	
 	private Aim aim;
 	
@@ -127,7 +123,6 @@ public class Window extends JPanel implements Runnable {
     			break;
 		}
 	}
-
 
 	public void run () {
 		frame.setSize(WIDTH, HEIGHT);
@@ -245,7 +240,6 @@ public class Window extends JPanel implements Runnable {
         		authUserList.setListData(users.getAuthsUsers(username));
         		aim.move((userList.getSelectedIndex()+1)*20 - scrollUsers.getVerticalScrollBar().getValue() );
         		aim.repaint();
-        		
         	}
         });
         
@@ -265,15 +259,13 @@ public class Window extends JPanel implements Runnable {
         			listener = new Thread(ls);
         			listener.start();
         			start.setText("Stop Server");
-        			isStart = true;
-        					
+        			isStart = true;			
         		}
         		else
         		{
         			ls.stop();
         			start.setText("Start Server");
-        			isStart = false		
-        			        ;
+        			isStart = false;
         		}
         	}
         });
@@ -281,8 +273,7 @@ public class Window extends JPanel implements Runnable {
         showMap.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		mapFrame.setVisible(true);
-    		}
-        	
+    		}	
     	});
     
         addUser.addActionListener(new ActionListener() {
@@ -454,8 +445,6 @@ public class Window extends JPanel implements Runnable {
         				qr.add(user);
         				qr.add(new QRCodeWindow("address:"+InetAddress.getLocalHost().getHostAddress()+" port:"+port+ " username:"+userList.getSelectedValue()));
         				qr.setVisible(true); 
-        				System.out.println(user.getWidth() + "");
- 
 	        		}
 	        	} catch(UnknownHostException e1){
 	        		e1.printStackTrace();
