@@ -69,10 +69,8 @@ public class Reader extends Activity {
 		//location.setText(locationString);
 		TextView loc = (TextView) findViewById(R.id.location);
 		loc.setText(locationString);
-		//this.setTitle("                       "+locationString); // TODO find a way to do that in a nicer way
 		
 		// sendButton animations:
-		
 		// fade in animation
 		Animation fadeIn = new AlphaAnimation(0, 1);
 		fadeIn.setInterpolator(new LinearInterpolator());
@@ -130,7 +128,6 @@ public class Reader extends Activity {
 				String user = prefs.getString("pref_username", null);
 				String password = prefs.getString("pref_password", null);
 				if(address==null || port==null || user==null || password==null) {
-					//Context context = istance.getBaseContext();
 					Toast error = Toast.makeText(context, "Some configuration is missing", Toast.LENGTH_LONG);
 					error.show();
 					return;
@@ -140,7 +137,7 @@ public class Reader extends Activity {
 				Thread connection = new Thread(new Communicator(handler, address, port, user, password, locationString, context));
 				connection.start();
 				
-				sendButton.setEnabled(true); // TODO maybe false?
+				sendButton.setEnabled(true);
 			}
 		});
 		
@@ -164,13 +161,9 @@ public class Reader extends Activity {
 		Tag myTag = (Tag) nfcintent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 		
 		if (myTag == null)
-				return "Error"; // TODO terminare l'applicazione
+				return "Error";
 		
 		Ndef ndefTag = Ndef.get(myTag);
-		//int size = ndefTag.getMaxSize();
-		//boolean writable = ndefTag.isWritable();
-		//String type = ndefTag.getType();
-		
 		
 		NdefMessage ndefMesg = ndefTag.getCachedNdefMessage();
 		NdefRecord[] ndefRecords = ndefMesg.getRecords();

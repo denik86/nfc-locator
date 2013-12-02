@@ -24,7 +24,6 @@ public class Configuration extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// No menu for this activity
-		//getMenuInflater().inflate(R.menu.activity_configuration, menu);
 		return true;
 	}
 

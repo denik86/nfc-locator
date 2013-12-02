@@ -102,7 +102,6 @@ public class Communicator implements Runnable {
 			in.close();
 			out.close();
 			socket.close();
-			// TODO test
 			
 		} catch (NumberFormatException e1) {
 			String error = "The port " + port + " is not valid";
@@ -148,7 +147,7 @@ public class Communicator implements Runnable {
 			updateConnectionStatus(0, message);
 			PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
 			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			String request = user + ":" + password + ":" + location; // TODO
+			String request = user + ":" + password + ":" + location;
 			out.println(request);
 			out.flush();
 			String response = in.readLine();

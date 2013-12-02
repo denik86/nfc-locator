@@ -73,7 +73,7 @@ public class SettingFragment extends PreferenceFragment {
 							prefsEditor.commit();
 								
 							// update GUI to show new data
-							((BaseAdapter)getPreferenceScreen().getRootAdapter()).notifyDataSetChanged(); // TODO not working
+							((BaseAdapter)getPreferenceScreen().getRootAdapter()).notifyDataSetChanged();
 							
 							// ask the password to the user
 							PreferenceScreen screen = getPreferenceScreen();
