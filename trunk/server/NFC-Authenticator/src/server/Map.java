@@ -48,8 +48,6 @@ public class Map extends JPanel{
         	}
         	br.close();    	
     		this.setLayout(null);
-       
-
         } catch (IOException e) {
         	e.printStackTrace();
         }

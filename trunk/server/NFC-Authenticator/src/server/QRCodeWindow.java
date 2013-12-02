@@ -56,7 +56,6 @@ public class QRCodeWindow extends JPanel {
 				}
 			}
 		}
-	
 		g.drawImage(image, 10, 50, this);
 	}
 

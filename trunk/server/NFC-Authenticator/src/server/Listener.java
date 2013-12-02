@@ -100,7 +100,6 @@ public class Listener implements Runnable {
 									out.close();
 									clientSocket.close();
 								} catch (Exception e) {
-									// e.printStackTrace();
 									out.println("An error has occurred while connecting with the resource");
 									in.close();
 									out.close();
@@ -125,16 +124,9 @@ public class Listener implements Runnable {
 						out.close();
 						clientSocket.close();
 					}
-					
-					/*System.out.println ("Server: " + inputLine); 
-					out.println(inputLine); 
-					if (inputLine.equals("Bye.")) 
-						break; */
 		        } 
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
 			System.out.println("Server socket closed");
 		}
 		
