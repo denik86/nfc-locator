@@ -17,8 +17,6 @@ import javax.swing.JPanel;
 
 public class Map extends JPanel{
 	
-	
-	
 	class Status
 	{	private int x, y, dx, dy;
 		private boolean visible;
@@ -34,9 +32,7 @@ public class Map extends JPanel{
 	
 	private static final long serialVersionUID = 1L;
 	
-   
     Hashtable<String, Status> ht;
-    private BufferedImage img;
     public int color;
 
 	public Map () {
@@ -51,7 +47,6 @@ public class Map extends JPanel{
         		ht.put(cArray[0], new Status(Integer.parseInt(cArray[1]), Integer.parseInt(cArray[2]), Integer.parseInt(cArray[3]), Integer.parseInt(cArray[4])));	
         	}
         	br.close();    	
-        	img = ImageIO.read(new File("torre.png"));
     		this.setLayout(null);
        
 
@@ -78,13 +73,9 @@ public class Map extends JPanel{
 		repaint();
 	}
 
-	
 	public void paint(Graphics g){
 		super.paint(g);
 		Graphics g2d = (Graphics2D) g;
-		//g2d.drawImage(img,0,0,this);
-		int p = 20;
-		
 		g2d.setColor(Color.decode("000033"));
 		g2d.fillRect(0, 0, 500, 500);
 		g2d.setColor(Color.decode("606060"));  
@@ -97,9 +88,9 @@ public class Map extends JPanel{
 		}
 
 		if(color == 1)
-			g2d.setColor(Color.decode("522000"));  
+			g2d.setColor(Color.GREEN);  
 		else if(color == 2)
-			g2d.setColor(Color.decode("100600900"));
+			g2d.setColor(Color.RED);
 		iterator = ht.keySet().iterator();
 		while(iterator.hasNext())
 		{
@@ -109,10 +100,3 @@ public class Map extends JPanel{
 		}
 	}
 }
-
-
-
-
-
-
-//ssh dronzani@djnd 192.168.22.87      w      export display:0.0    xclock
