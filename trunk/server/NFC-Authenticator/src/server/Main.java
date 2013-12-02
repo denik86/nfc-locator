@@ -30,7 +30,7 @@ public class Main {
 		}
 		
 		// load the database
-		UsersDB db = new UsersDB("provaDB", "users", "auth");
+		UsersDB db = new UsersDB("database", "users", "auth");
 		
 		// create the main window
 		final JFrame frame = new JFrame("NFC Locator Server");
