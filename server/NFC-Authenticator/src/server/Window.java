@@ -352,7 +352,7 @@ public class Window extends JPanel implements Runnable {
         		JPanel p = new JPanel(new BorderLayout(5,5));
     	        JPanel labels = new JPanel(new GridLayout(0,1,2,2));
     	        labels.add(new JLabel("Resource Name", SwingConstants.RIGHT));
-    	        labels.add(new JLabel("Address", SwingConstants.RIGHT));
+    	        labels.add(new JLabel("Address (IP:PORT)", SwingConstants.RIGHT));
     	        p.add(labels ,BorderLayout.WEST);
 
     	        JPanel controls = new JPanel(new GridLayout(0,1,2,2));
@@ -365,7 +365,6 @@ public class Window extends JPanel implements Runnable {
     	        boolean done = false;
     	        while(!done) {
     	        	int n = JOptionPane.showConfirmDialog(frame, p, "Add new Authorization", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-    	        	System.out.println(""+n);
     	        	if(n == 0) {
         	        	if(resource.getText().equals("")) {
         	        		JOptionPane.showMessageDialog(frame, "Resource Name field is empty");
