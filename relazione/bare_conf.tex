@@ -505,7 +505,7 @@ The system is composed by three logical part:
 \end{figure}
 
 The client consist of an Android application (NFC Locator) that allows the user to detect the resource. After the reading, the app will send the request to access the resource to the remote server.
-The server (NFC Authenticator) is an application that receive requests and contains a database that store usernames, passwords, and permission of everyone.  There is also a graphical interface that allows the system administrator to manage the users.
+The server (NFC Authenticator) is an application that receive requests and contains a database that store usernames, passwords, and permission of everyone.  There is also a graphical interface that allows the system administrator to manage the accounts.
 The resource consist of a component that can be remotely controlled by the server, in our case a prototype of a door lock. Through an ethernet connection it can communicate on the network with the server and receive the “open” command.
 
 \subsection{Networks}
@@ -531,7 +531,7 @@ The application is composed by two parts, the configuration and the reading.
 \subsubsection{Configuration}
 
 the configuration window allows the user to set all the network parameter and login information, like username and password.
-Even if the configuration must be done once, it seemed too difficult to let configure server address and port to an average user, and because the application was made to be user friendly and usable by most people have been added the “One-Click Configuration” option: after that an user has been added into the server, can be automatically generate a QR code; the user just have to point the phone to the QR code to setup all network parameter. The only information that have to be inserted manually is the password, for security reason.
+Even if the configuration must be done once, it seemed too difficult to let configure server address and port to an average user, and because the application was made to be user friendly and usable by most people have been added the “One-Click Configuration” option: after an user has been added into the server, can be automatically generated a QR code; the user just have to point the phone to the QR code to setup all network parameter. The only information that have to be inserted manually is the password, for security reason.
 
 \subsubsection{Reading}
 
