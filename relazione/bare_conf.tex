@@ -484,6 +484,8 @@ For the first step it was required to implement a server with a database to stor
 The second step was reached making the system able to detect what resource is required by an user. Even if the position of every resource is known, the A-GPS cannot be used, because of the low granularity provided for indoor localization. Instead we used one NFC tag (with a 4-5 cm range) for every resource, that contain an ID that allows the system to understand where the user is, and what resource is required.
 The third step is partially satisfacted by design, because any Android smartphone can be protected with a password lock screen. The wireless communication between the Android phone and the authentication server implies possible security issues, so has been used the TLS encryption to ensure a secure communication.
 
+\textit{Related Work:} A similar solution already exists [6], and it uses an innovative access control system. Through a NFC P2P connection, the smartphone communicates with an NFC reader inside an electronic door lock. In this case the key can be locally stored (inside the phone) or stored in the cloud. Even if this system is really advanced, every lock contains al lot of features, as the NFC communicator, that implies a substantial cost for each door, unlike our work.
+
 \section{NFAuthenticator System}
 The system introduced here is proposed as a substitute for the current authentication system though NFC tag. The basic idea, which differs from the classical solutions, is the reverse approach of how the user is authenticated: while, in the classical way, the tag represents the access key and the reader is the "lock", in our approach the NFC reader of smartphone become the key, and the tag represents the door. In this way, the user does not bring with him the tag, but the reader, that can identify the resource approached and request the access to a remote server.
 
@@ -531,11 +533,21 @@ The application is composed by two parts, the configuration and the reading.
 \subsubsection{Configuration}
 
 the configuration window allows the user to set all the network parameter and login information, like username and password.
-Even if the configuration must be done once, it seemed too difficult to let configure server address and port to an average user, and because the application was made to be user friendly and usable by most people have been added the “One-Click Configuration” option: after an user has been added into the server, can be automatically generated a QR code; the user just have to point the phone to the QR code to setup all network parameter. The only information that have to be inserted manually is the password, for security reason.
+Even if the configuration must be done once, it seemed too difficult to let configure server address and port to an average user, and because the application was made to be user friendly and usable by most people have been added the “One-Click Configuration” option: after an user has been added into the server, can be automatically generated a QR code; the user just have to point the phone to the QR code to setup all network parameter. The protocol used by the QR reader needs a string designed with the following pattern:
+\begin{center}
+\textit{``address:\textless address\textgreater\ port:\textless port\textgreater\ user:\textless username\textgreater}''
+\end{center}
+
+
+ The only information that have to be inserted manually is the password, for security reason.
 
 \subsubsection{Reading}
 
-to maintain the application easy to use, the user don’t have to launch any application to detect a resource. It is enough to approach the phone to the resource to make appear the window on the image 4. The only part that can be touched in the interface is the big green button in the middle, that given it’s large dimension is easily usable even for visually impaired people. When the button is pressed, a request containing the login and the resource ID is sent to the server, while the app shows a progress indicator. After a moment the positive or negative response appears. At the end of the operation the window will automatically close, preventing the reiteration of the process.
+to maintain the application easy to use, the user don’t have to launch any application to detect a resource. It is enough to approach the phone to the resource to make appear the window on the image 4. The only part that can be touched in the interface is the big green button in the middle, that given it’s large dimension is easily usable even for visually impaired people. When the button is pressed, a request containing the login and the resource ID is sent to the server, while the app shows a progress indicator. The message sent must contains a string in the following pattern:
+\begin{center}
+\textit{``\textless username\textgreater :\textless password\textgreater :\textless resource ID\textgreater}''
+\end{center}
+ After a moment the positive or negative response appears. At the end of the operation the window will automatically close, preventing the reiteration of the process.
 
 \subsection{Server Side}
 
@@ -620,12 +632,12 @@ The system is made to be used very often, so it doesn’t just need to be easy t
 
 \begin{figure}[h]
 \centering
-\includegraphics[scale=0.3]{fig7}
+\includegraphics[scale=0.35]{fig7}
 \caption{Performance graph}
-\label{fig_sim}
+\label{graph}
 \end{figure}
 
-In more than 50\% of the measurements the client complete the communication process in less than 400 ms.  Sometimes the time can be greater because of network congestions, but the procedure never spends more than a couple of seconds. 
+In more than 60\% of the measurements the client complete the communication process in less than 400 ms as can be seen in the cumulative graphic \ref{graph}.  Sometimes the time can be greater because of network congestions, but the procedure never spends more than a couple of seconds. 
 Overall the mean of access time should be lower than the classical approach, because the user doesn’t need to search the NFC card inside the wallet, but have to use his smartphone, that usually is in handy.
 
 % An example of a floating figure using the graphicx package.
@@ -765,6 +777,9 @@ Gauthier Van Damme and Karel Wouters, \emph{Practical Experiences with NFC Secur
 \bibitem{paper5}
 W. Chen, G.P. Hancke and K.E. Mayes, Y. Lien, J-H. Chiu, \emph{NFC Mobile Transactions and Authentication based on GSM Network}, \hskip 1em plus
 0.5em minus 0.4em\relax 2010.
+\bibitem{paper6}
+Pascal Urien, \emph{A Secure Cloud of Electronic Keys for NFC Locks Securely Controlled by NFC Smartphones}, \hskip 1em plus
+0.5em minus 0.4em\relax Las Vegas,  IEEE CCNC 2014.
 \end{thebibliography}
 
 
