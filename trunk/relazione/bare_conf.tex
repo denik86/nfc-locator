@@ -487,7 +487,7 @@ For the first step it was required to implement a server with a database to stor
 The second step was reached making the system able to detect what resource is required by a user. Even if the position of every resource is known, the A-GPS cannot be used, because of the low granularity provided for indoor localization. Instead we used one NFC tag (with a 4-5 cm range) for every resource, that contain an ID that allows the system to understand where the user is, and what resource is required.
 The third step is partially reached by design, because any Android smartphone can be protected with a password lock screen. The wireless communication between the Android phone and the authentication server implies possible security issues, so has been used the TLS encryption to ensure a secure communication.
 
-\textit{Related Work:} A similar solution already exists [6], and it uses an innovative access control system. Through a NFC P2P connection, the smartphone communicates with an NFC reader inside an electronic door lock. In this case the key can be locally stored (inside the phone) or stored in the cloud. Even if this system is really advanced, every lock contains al lot of features, as the NFC communicator, that implies a substantial cost for each door, unlike our work.
+\textit{Related Work:} A similar solution already exists [6], and it uses an innovative access control system. Through a NFC P2P connection, the smartphone communicates with an NFC reader inside an electronic door lock. In this case the key can be locally stored (inside the phone) or stored in the cloud. Even if this system is really advanced, every lock contains a lot of features, as the NFC communicator, that implies a substantial cost for each door, unlike our work.
 
 \section{NFAuthenticator System}
 The system introduced here is proposed as a substitute for the current authentication system though NFC tags. The basic idea, which differs from the classical solutions, is the reverse approach of how the user is authenticated: while, in the classical way, the tag represents the access key and the reader is the ``lock'', in our approach the NFC reader of smartphone become the key, and the tag represents the door. In this way, the user does not bring with him the tag, but the reader, that can identify the resource approached and request the access to a remote server.
@@ -616,6 +616,13 @@ Database has been designed with ER diagram shown in Figure 6.
 
 \subsection{Resource}
 
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.3]{resource}
+\caption{Image of the prototype used in the demo}
+\label{resource}
+\end{figure}
+
 The resource was built to be much similar as possible to a lock. To realize it was used an Arduino Uno r3, programmed to reflect the behaviour of a remotely controlled lock, so there is a small motor that move the closing cylinder and a display that show the state when necessary.
 The connection to the server is provided by an ethernet interface, that allow the exchange of packets between them. 
 Inside the lock there is an NFC tag, that contains the identification of the resource, needed to be recognised by the server. The tag used is a ``NTAG203'', that contains up to 137 byte of payload.
@@ -628,6 +635,7 @@ Tags are passive objects, that can be used even by not authorized users in case 
 A second problem of the tags is that they can be read by every reader, even if the tag is not used. For that reason most tag contains encrypted information, or use more sophisticated ways to avoid man in the middle attack [1].
 In the proposed system, the smartphone is the reader, and the only passive entity is the resource, that contains not sensible information (the ID is meaningless outside the system). Moreover, every Android phone turn off the NFC antenna when the screen is locked, preventing possible security issues.
 An essential point of the system is represented by the connection between the client and the server, where are exchanged sensible information. For this reason, the connection have been encrypted using the TLS protocol; the client contains a certificate that allow to authenticate the server identity, preventing ``man in the middle'' attacks.
+In addition, it is useful to emphasize that in the system there is no authentication data exchanged between the client and the resource. For that reason, even if the NFC communication is eavesdropped, no sensible data can be collected.
 
 \section{Performance}
 
@@ -643,93 +651,13 @@ The system is made to be used very often, so it does not just need to be easy to
 In more than 60\% of the measurements the client completed the communication process in less than 400 ms as can be seen in the cumulative graphic in Figure \ref{graph}.  Sometimes the time can be greater because of network congestions, but the procedure never spends more than a couple of seconds. 
 Overall the mean of access time should be lower than the classical approach, because the user doesn’t need to search the NFC card inside the wallet, but have to use his smartphone, that usually is in handy.
 
-% An example of a floating figure using the graphicx package.
-% Note that \label must occur AFTER (or within) \caption.
-% For figures, \caption should occur after the \includegraphics.
-% Note that IEEEtran v1.7 and later has special internal code that
-% is designed to preserve the operation of \label within \caption
-% even when the captionsoff option is in effect. However, because
-% of issues like this, it may be the safest practice to put all your
-% \label just after \caption rather than within \caption{}.
-%
-% Reminder: the "draftcls" or "draftclsnofoot", not "draft", class
-% option should be used if it is desired that the figures are to be
-% displayed while in draft mode.
-%
-%\begin{figure}[!t]
-%\centering
-%\includegraphics[width=2.5in]{myfigure}
-% where an .eps filename suffix will be assumed under latex, 
-% and a .pdf suffix will be assumed for pdflatex; or what has been declared
-% via \DeclareGraphicsExtensions.
-%\caption{Simulation Results}
-%\label{fig_sim}
-%\end{figure}
 
-% Note that IEEE typically puts floats only at the top, even when this
-% results in a large percentage of a column being occupied by floats.
-
-
-% An example of a double column floating figure using two subfigures.
-% (The subfig.sty package must be loaded for this to work.)
-% The subfigure \label commands are set within each subfloat command, the
-% \label for the overall figure must come after \caption.
-% \hfil must be used as a separator to get equal spacing.
-% The subfigure.sty package works much the same way, except \subfigure is
-% used instead of \subfloat.
-%
-%\begin{figure*}[!t]
-%\centerline{\subfloat[Case I]\includegraphics[width=2.5in]{subfigcase1}%
-%\label{fig_first_case}}
-%\hfil
-%\subfloat[Case II]{\includegraphics[width=2.5in]{subfigcase2}%
-%\label{fig_second_case}}}
-%\caption{Simulation results}
-%\label{fig_sim}
-%\end{figure*}
-%
-% Note that often IEEE papers with subfigures do not employ subfigure
-% captions (using the optional argument to \subfloat), but instead will
-% reference/describe all of them (a), (b), etc., within the main caption.
-
-
-% An example of a floating table. Note that, for IEEE style tables, the 
-% \caption command should come BEFORE the table. Table text will default to
-% \footnotesize as IEEE normally uses this smaller font for tables.
-% The \label must come after \caption as always.
-%
-%\begin{table}[!t]
-%% increase table row spacing, adjust to taste
-%\renewcommand{\arraystretch}{1.3}
-% if using array.sty, it might be a good idea to tweak the value of
-% \extrarowheight as needed to properly center the text within the cells
-%\caption{An Example of a Table}
-%\label{table_example}
-%\centering
-%% Some packages, such as MDW tools, offer better commands for making tables
-%% than the plain LaTeX2e tabular which is used here.
-%\begin{tabular}{|c||c|}
-%\hline
-%One & Two\\
-%\hline
-%Three & Four\\
-%\hline
-%\end{tabular}
-%\end{table}
-
-
-% Note that IEEE does not put floats in the very first column - or typically
-% anywhere on the first page for that matter. Also, in-text middle ("here")
-% positioning is not used. Most IEEE journals/conferences use top floats
-% exclusively. Note that, LaTeX2e, unlike IEEE journals/conferences, places
-% footnotes above bottom floats. This can be corrected via the \fnbelowfloat
-% command of the stfloats package.
 
 
 
 \section{Conclusion}
 
-This work has been presented as an alternative to actual NFC authentication systems; have been proposed a new system, that allows to reach a higher security level than some classical RFID card, and that makes the key of a real door completely virtual. The virtualization does not just give us the chance to use and Android phone for the authentication, but could also be used to automate all those operation that are now manually handled, like the keys/cards distribution without requiring an higher operating cost.
+This work has been presented as an alternative to actual NFC authentication systems; have been proposed a new system, that allows to reach a higher security level than some classical RFID card, and that makes the key of a real door completely virtual. The virtualization does not just give us the chance to use and Android phone for the authentication, but could also be used to automate all those operation that are now manually handled, like the keys/cards distribution without requiring an higher operating cost. In fact the cost is lower than other solutions [6], because all the components can be retrieved for less than 30 euros. Moreover, all the elements can be easily assembled without the need of an industrial process, as showed in the demo.
 
 
 
