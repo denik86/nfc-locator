@@ -490,6 +490,14 @@ The third step is partially reached by design, because any Android smartphone ca
 \textit{Related Work:} A similar solution already exists [6], and it uses an innovative access control system. Through a NFC P2P connection, the smartphone communicates with an NFC reader inside an electronic door lock. In this case the key can be locally stored (inside the phone) or stored in the cloud. Even if this system is really advanced, every lock contains a lot of features, as the NFC communicator, that implies a substantial cost for each door, unlike our work.
 
 \section{NFAuthenticator System}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.08]{fig8}
+\caption{The demonstration platform}
+\label{architecture}
+\end{figure}
+
 The system introduced here is proposed as a substitute for the current authentication system though NFC tags. The basic idea, which differs from the classical solutions, is the reverse approach of how the user is authenticated: while, in the classical way, the tag represents the access key and the reader is the ``lock'', in our approach the NFC reader of smartphone become the key, and the tag represents the door. In this way, the user does not bring with him the tag, but the reader, that can identify the resource approached and request the access to a remote server.
 
 In addition, the relationship between tag and its resource is inherently a system of localization, because the reading implies physical proximity between the smartphone and the place where the door resides, allowing the system administrator to have an almost real-time view of accesses (and relative positions) of the users during the authentication process.
@@ -628,11 +636,15 @@ The connection to the server is provided by an ethernet interface, that allow th
 Inside the lock there is an NFC tag, that contains the identification of the resource, needed to be recognised by the server. The tag used is a ``NTAG203'', that contains up to 137 byte of payload.
 To preserve the compatibility with cards that are often used now, have been added an RFID reader, also usable in case of emergency or if there are network issues.
 
+\subsection{Usage}
+
+TODO
+
 \subsection{Security}
 
 This system was proposed to replace NFC tags, so will be done a comparison between the security offered by both methods.
 Tags are passive objects, that can be used even by not authorized users in case of loss. The advantage on the use of a smartphone as user interface is given by the possibility to use a password to unlock it, so it add an obstacle to a possible thief.
-A second problem of the tags is that they can be read by every reader, even if the tag is not used. For that reason most tag contains encrypted information, or use more sophisticated ways to avoid man in the middle attack [1].
+A second problem of tags is that they can be read by every reader, even if the tag is not used. For that reason most tag contains encrypted information, or use more sophisticated ways to avoid man in the middle attacks [1].
 In the proposed system, the smartphone is the reader, and the only passive entity is the resource, that contains not sensible information (the ID is meaningless outside the system). Moreover, every Android phone turn off the NFC antenna when the screen is locked, preventing possible security issues.
 An essential point of the system is represented by the connection between the client and the server, where are exchanged sensible information. For this reason, the connection have been encrypted using the TLS protocol; the client contains a certificate that allow to authenticate the server identity, preventing ``man in the middle'' attacks.
 In addition, it is useful to emphasize that in the system there is no authentication data exchanged between the client and the resource. For that reason, even if the NFC communication is eavesdropped, no sensible data can be collected.
@@ -651,15 +663,9 @@ The system is made to be used very often, so it does not just need to be easy to
 In more than 60\% of the measurements the client completed the communication process in less than 400 ms as can be seen in the cumulative graphic in Figure \ref{graph}.  Sometimes the time can be greater because of network congestions, but the procedure never spends more than a couple of seconds. 
 Overall the mean of access time should be lower than the classical approach, because the user doesn’t need to search the NFC card inside the wallet, but have to use his smartphone, that usually is in handy.
 
+\section{Conclusions}
 
-
-
-
-\section{Conclusion}
-
-This work has been presented as an alternative to actual NFC authentication systems; have been proposed a new system, that allows to reach a higher security level than some classical RFID card, and that makes the key of a real door completely virtual. The virtualization does not just give us the chance to use and Android phone for the authentication, but could also be used to automate all those operation that are now manually handled, like the keys/cards distribution without requiring an higher operating cost. In fact the cost is lower than other solutions [6], because all the components can be retrieved for less than 30 euros. Moreover, all the elements can be easily assembled without the need of an industrial process, as showed in the demo.
-
-
+This work has been presented as an alternative to actual NFC authentication systems; have been proposed a new system, that allows to reach a higher security level than some classical RFID card while keeping its simplicity and reactivity, and that makes the key of a real door completely virtual. The virtualization does not just give us the chance to use and Android phone for the authentication, but could also be used to automate all those operation that are now manually handled, like the keys/cards distribution, without requiring an higher operating cost. In fact the cost is lower than other solutions [6], and all the components used to build the prototype can be bought for less than 30 euros. Moreover, all the elements can be easily assembled without the need of an industrial process, as showed in the demo.
 
 
 % conference papers do not normally have an appendix
