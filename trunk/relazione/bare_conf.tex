@@ -369,19 +369,19 @@
 % use a multiple column layout for up to three different
 % affiliations
 \author{\IEEEauthorblockN{Daniele Ronzani}
-\IEEEauthorblockA{Department of Pure and Applied Mathematics\\
+\IEEEauthorblockA{Department of Mathematics\\
 University of Padua\\
 Padua, Italy\\
 daniele.ronzani@gmail.com}
 \and
 \IEEEauthorblockN{Michele Massaro}
-\IEEEauthorblockA{Department of Pure and Applied Mathematics\\
+\IEEEauthorblockA{Department of Mathematics\\
 University of Padua\\
 Padua, Italy\\
 michele.massaro@me.com}}
 
 % conference papers do not typically use \thanks and this command
-% is locked out in conference mode. If really needed, such as for
+% is locked out in conference mode. If realizereally needed, such as for
 % the acknowledgment of grants, issue a \IEEEoverridecommandlockouts
 % after \documentclass
 
@@ -417,11 +417,11 @@ michele.massaro@me.com}}
 
 \begin{abstract}
 %\boldmath
-The NFC is a technology that allows communication over short distance. Nowadays it is used to exchange data between smartphone or for authentication system, for example many buildings use tags instead of keys to open doors.
-Actually, most of the current solutions are based on the recognition of the user using the information contained inside the NFC tag.
+NFC is a technology that allows communication over short distance. Nowadays it is used to exchange data between smartphone or for authentication system, for example many buildings use tags instead of keys to open doors.
+Actually, most of the current solutions are based on the identification of the user using the information contained inside the NFC tag.
 This approach implies some problems involved by the use of a passive key, such as the inability to lock the key to prevent unauthorized use.
-The purpose of this work is to realize an authentication system based on a client-server architecture that allows to access, through a login, to some areas inside a building identified by NFC tags and read by an Android phone.
-Moreover, those tags can be used to uniquely identify the positions of the users during the authentication process, allowing the administrator to track the users’ activity while inside the building.
+The purpose of this work is to create an authentication system based on a client-server architecture that allows to access, through a login, to some areas inside a building identified by NFC tags and read by an Android phone.
+Moreover, those tags can be used to uniquely identify the positions of the users during the authentication process, allowing the administrator to track the users activity while inside the building.\\
 
 
 \end{abstract}
@@ -432,7 +432,10 @@ Moreover, those tags can be used to uniquely identify the positions of the users
 % of the abstract to achieve this. Many IEEE journals/conferences frown on
 % math in the abstract anyway.
 
-% no keywords
+
+
+\textbf{\textit{Keyword- NFC, TLS, Security, Android}}
+
 
 
 
@@ -456,10 +459,10 @@ The NFC had a strong impact on many practical use, and that caused a big interes
 Thanks to the ease of use and the lack of configuration of the protocol, it became used on a lot of fields:
 
 \begin{itemize}
- \item contactless payment
- \item health care
- \item smart touch
- \item authentication
+ \item contactless payment;
+ \item health care;
+ \item smart touch;
+ \item authentication.
 \end{itemize}
 
 One field where it became very popular is the authentication one: nowadays it is easy to find NFC tags used like electronic keys in hotels or big buildings.
@@ -468,26 +471,26 @@ For example a lot of hotels replaced their keys with NFC/RFID cards. Anyway, the
 \begin{itemize}
  \item cards/tags are passive like keys, so there is no way to protect them with password in case of loss;
  \item the user must carry another object with himself;
- \item the inability to automate the key distribution process (for example in the hotel scenario the user must ask for the card to the reception);
+ \item the inability to automate the key distribution process (for example in the hotel scenario the user must ask for the card to the reception).
 \end{itemize}
 
-This work consist of the implementation of an authentication system that could be applied on buildings where different users can access only certain parts of it (for example in a hotel every user can access only his room). The system has to maintain the ease of use of tags, provide a better security and must solve all the problem explained before; to allow the user to not bring additional objects, we chose to use for the authentication a device that most people already own: the smartphone.
+This work consists of the implementation of an authentication system that could be applied on buildings where different users can access only certain parts of it (for example in a hotel every user can access only his room). The system has to maintain the ease of use of tags, provide a better security and must solve all the problem explained before; to allow the user to not bring additional objects, we chose to use for the authentication a device that most people already own: the smartphone.
 The system follows three objective:
 
 \begin{itemize}
  \item provide an authentication system that allows only to authorized users to open doors;
  \item keep the user-friendliness of the classic NFC/RFID system;
- \item provide a better security than NFC tags;
+ \item provide a better security than NFC tags.
 \end{itemize}
 
 For the first step it was required to implement a server with a database to store users accounts and resources (doors informations). In this way, a registered user can be authenticated through a login and can get (or not) the permission to open a certain door.
-The second step was reached making the system able to detect what resource is required by an user. Even if the position of every resource is known, the A-GPS cannot be used, because of the low granularity provided for indoor localization. Instead we used one NFC tag (with a 4-5 cm range) for every resource, that contain an ID that allows the system to understand where the user is, and what resource is required.
-The third step is partially satisfacted by design, because any Android smartphone can be protected with a password lock screen. The wireless communication between the Android phone and the authentication server implies possible security issues, so has been used the TLS encryption to ensure a secure communication.
+The second step was reached making the system able to detect what resource is required by a user. Even if the position of every resource is known, the A-GPS cannot be used, because of the low granularity provided for indoor localization. Instead we used one NFC tag (with a 4-5 cm range) for every resource, that contain an ID that allows the system to understand where the user is, and what resource is required.
+The third step is partially reached by design, because any Android smartphone can be protected with a password lock screen. The wireless communication between the Android phone and the authentication server implies possible security issues, so has been used the TLS encryption to ensure a secure communication.
 
 \textit{Related Work:} A similar solution already exists [6], and it uses an innovative access control system. Through a NFC P2P connection, the smartphone communicates with an NFC reader inside an electronic door lock. In this case the key can be locally stored (inside the phone) or stored in the cloud. Even if this system is really advanced, every lock contains al lot of features, as the NFC communicator, that implies a substantial cost for each door, unlike our work.
 
 \section{NFAuthenticator System}
-The system introduced here is proposed as a substitute for the current authentication system though NFC tag. The basic idea, which differs from the classical solutions, is the reverse approach of how the user is authenticated: while, in the classical way, the tag represents the access key and the reader is the "lock", in our approach the NFC reader of smartphone become the key, and the tag represents the door. In this way, the user does not bring with him the tag, but the reader, that can identify the resource approached and request the access to a remote server.
+The system introduced here is proposed as a substitute for the current authentication system though NFC tags. The basic idea, which differs from the classical solutions, is the reverse approach of how the user is authenticated: while, in the classical way, the tag represents the access key and the reader is the ``lock'', in our approach the NFC reader of smartphone become the key, and the tag represents the door. In this way, the user does not bring with him the tag, but the reader, that can identify the resource approached and request the access to a remote server.
 
 In addition, the relationship between tag and its resource is inherently a system of localization, because the reading implies physical proximity between the smartphone and the place where the door resides, allowing the system administrator to have an almost real-time view of accesses (and relative positions) of the users during the authentication process.
 
@@ -628,7 +631,7 @@ An essential point of the system is represented by the connection between the cl
 
 \section{Performance}
 
-The system is made to be used very often, so it doesn’t just need to be easy to use, but it must be fast to not annoy users. For this reason have been done tests on the reactivity of the system, and the result are shown of the graph on the Figure 7.
+The system is made to be used very often, so it does not just need to be easy to use, but it must be fast to not annoy users. For this reason have been done tests on the reactivity of the system, and the result are shown of the graph on the Figure 7.
 
 \begin{figure}[h]
 \centering
@@ -637,7 +640,7 @@ The system is made to be used very often, so it doesn’t just need to be easy t
 \label{graph}
 \end{figure}
 
-In more than 60\% of the measurements the client complete the communication process in less than 400 ms as can be seen in the cumulative graphic \ref{graph}.  Sometimes the time can be greater because of network congestions, but the procedure never spends more than a couple of seconds. 
+In more than 60\% of the measurements the client completed the communication process in less than 400 ms as can be seen in the cumulative graphic in Figure \ref{graph}.  Sometimes the time can be greater because of network congestions, but the procedure never spends more than a couple of seconds. 
 Overall the mean of access time should be lower than the classical approach, because the user doesn’t need to search the NFC card inside the wallet, but have to use his smartphone, that usually is in handy.
 
 % An example of a floating figure using the graphicx package.
@@ -726,7 +729,7 @@ Overall the mean of access time should be lower than the classical approach, bec
 
 \section{Conclusion}
 
-This work has been presented as an alternative to actual NFC authentication systems; have been proposed a new system, that allows to reach an higher security level than some classical RFID card, and that makes the key of a real door completely virtual. The virtualization doesn’t just give us the chance to use and Android phone for the authentication, but could also be used to automate all those operation that are now manually handled, like the keys/cards distribution without requiring an higher operating cost.
+This work has been presented as an alternative to actual NFC authentication systems; have been proposed a new system, that allows to reach a higher security level than some classical RFID card, and that makes the key of a real door completely virtual. The virtualization does not just give us the chance to use and Android phone for the authentication, but could also be used to automate all those operation that are now manually handled, like the keys/cards distribution without requiring an higher operating cost.
 
 
 
