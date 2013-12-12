@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.9.26)  12 DEC 2013 15:17
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.9.26)  12 DEC 2013 16:41
 entering extended mode
  %&-line parsing enabled.
 **bare_conf.tex
@@ -267,16 +267,23 @@ File: fig6.png Graphic file (type png)
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[3 <./fig3.png> <./fig4.png>] <fig7.png, id=28, 711.65875pt x 411.5375pt>
+<resource.png, id=23, 843.15pt x 401.5pt>
+File: resource.png Graphic file (type png)
+ <use resource.png>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[3 <./fig3.png> <./fig4.png>] <fig7.png, id=29, 711.65875pt x 411.5375pt>
 File: fig7.png Graphic file (type png)
 
 <use fig7.png>
 Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no ™ in font ptmr7t!
+ [4 <./fig5.png> <./fig6.png> <./resource.png> <./fig7.png (PNG copy)>]
 Missing character: There is no Ã in font ptmr7t!
 Missing character: There is no Ÿ in font ptmr7t!
- [4 <./fig5.png> <./fig6.png> <./fig7.png (PNG copy)>]
+
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -296,22 +303,22 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 1826 strings out of 493848
- 27906 string characters out of 1152823
- 85818 words of memory out of 3000000
- 5121 multiletter control sequences out of 15000+50000
+ 1832 strings out of 493848
+ 27995 string characters out of 1152823
+ 85826 words of memory out of 3000000
+ 5126 multiletter control sequences out of 15000+50000
  37453 words of font info for 66 fonts, out of 3000000 for 9000
  717 hyphenation exceptions out of 8191
- 26i,6n,24p,964b,209s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 26i,6n,24p,964b,192s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
 ve/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/ty
 pe1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/urw/tim
 es/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmbi8a.pfb></usr
 /share/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-texlive
 /fonts/type1/urw/times/utmri8a.pfb>
-Output written on bare_conf.pdf (5 pages, 415719 bytes).
+Output written on bare_conf.pdf (5 pages, 1060446 bytes).
 PDF statistics:
- 57 PDF objects out of 1000 (max. 8388607)
+ 59 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 36 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 41 words of extra memory for PDF output out of 10000 (max. 10000000)
 
