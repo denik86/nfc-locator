@@ -514,7 +514,7 @@ The system is composed by three logical part:
 \centering
 \includegraphics[scale=0.4]{fig1}
 \caption{System Architecture}
-\label{fig_sim}
+\label{arch}
 \end{figure}
 
 The client consist of an Android application (NFC Locator) that allows the user to detect the resource. After the reading, the app will send the request to access the resource to the remote server.
@@ -538,7 +538,7 @@ The application is composed by two parts, the configuration and the reading.
 \centering
 \includegraphics[scale=0.15]{fig2}
 \caption{\textbf{NFC Locator: }Left: Configuration window; Right: Reader window}
-\label{fig_sim}
+\label{client}
 \end{figure}
 
 \subsubsection{Configuration}
@@ -566,6 +566,7 @@ The server program is an application that consists of two concurrent entities: o
 
 \subsubsection{Listener}
 
+\label{serverCheck}
 the server has a listener that waits for messages from clients requesting access to a resource. For this function there is a thread that listens on a port and waits for a TCP/IP communication from the client. The full flow can be seen in Figure 3.
 Once the channel is open, the server waits to receive a message from the client containing the user's account information, and the data of tag detected. First, a check is performed on login data received, and only if these are correct is checked that the user has the necessary permission to use the resource. If both controls have a positive outcome, the server open a connection to the requested resource, sending the command to open and possible additional data, such as the username of the requesting user. Only at the reception of the ack by the resource, the server considers the operation completed and sends the positive response to the user.
 
@@ -573,7 +574,7 @@ Once the channel is open, the server waits to receive a message from the client 
 \centering
 \includegraphics[scale=0.5]{fig3}
 \caption{Communication flow}
-\label{fig_sim}
+\label{flow}
 \end{figure}
 
 \subsubsection{Graphics}
@@ -582,7 +583,7 @@ Once the channel is open, the server waits to receive a message from the client 
 \centering
 \includegraphics[scale=0.35]{fig4}
 \caption{Server GUI}
-\label{fig_sim}
+\label{gui}
 \end{figure}
 
 the graphics part is characterized by a window with three main areas:
@@ -606,7 +607,7 @@ Another feature is the presence of a window that alerts the administrator of aut
 \centering
 \includegraphics[scale=0.5]{fig5}
 \caption{Server map window}
-\label{fig_sim}
+\label{map}
 \end{figure}
 
 \subsection{Database}
@@ -619,7 +620,7 @@ Database has been designed with ER diagram shown in Figure 6.
 \centering
 \includegraphics[scale=0.5]{fig6}
 \caption{Database ER diagram}
-\label{fig_sim}
+\label{db_ER}
 \end{figure}
 
 \subsection{Resource}
@@ -638,7 +639,14 @@ To preserve the compatibility with cards that are often used now, have been adde
 
 \subsection{Usage}
 
-TODO
+When the whole system is ready, its behavior can be summarized as follow:
+\begin{itemize}
+ \item a user approach his NFC smartphone to the door lock
+ \item the smartphone detect the NFC tag and prompt the user to confirm the operation
+ \item then the button on the client window is pressed, the mobile application try to connect to the server, through a TLS connection.
+ \item if the connection is successful, the phone send login and door information to the server
+ \item the server verify the information received, and if they are correct the lock is informed,  as explained before (\ref{serverCheck})
+\end{itemize}
 
 \subsection{Security}
 
@@ -661,18 +669,12 @@ The system is made to be used very often, so it does not just need to be easy to
 \end{figure}
 
 In more than 60\% of the measurements the client completed the communication process in less than 400 ms as can be seen in the cumulative graphic in Figure \ref{graph}.  Sometimes the time can be greater because of network congestions, but the procedure never spends more than a couple of seconds. 
-Overall the mean of access time should be lower than the classical approach, because the user doesn’t need to search the NFC card inside the wallet, but have to use his smartphone, that usually is in handy.
+Overall the mean of access time should be lower than the classical approach, because the user does not need to search the NFC card inside the wallet, but have to use his smartphone, that usually is in handy.
 
 \section{Conclusions}
 
 This work has been presented as an alternative to actual NFC authentication systems; have been proposed a new system, that allows to reach a higher security level than some classical RFID card while keeping its simplicity and reactivity, and that makes the key of a real door completely virtual. The virtualization does not just give us the chance to use an Android phone for the authentication, but could also be used to automate all those operations that are now manually handled, like the keys/cards distribution: for example a hotel can provide a booking system that send a QR code through email to customers, allowing them to configure their phone in advance and avoid queue at the reception to gather keys.
 Another important feature is the cost of this solution, lower than others [6], in fact all the components used to build the prototype can be bought for less than 30 euros. Moreover, all the elements can be easily assembled without the need of an industrial process, as showed in the demo.
-
-
-% conference papers do not normally have an appendix
-
-
-
 
 
 % trigger a \newpage just before the given reference
@@ -703,19 +705,19 @@ Another important feature is the cost of this solution, lower than others [6], i
 Y.S Lee, E. Kim, and M.S. Jung, ``A NFC based Authentication method for defense 
 of the Man in the Middle Attack'', in proc. of ICCSIT'2013, Bali, Indonesia, January 2013. 
 \bibitem{paper2}
-P. Urien, ``NFC Technologies for the Internet Of Things'', 2013.
+P. Urien, ``NFC Technologies for the Internet Of Things'', Rome, Italy, June, 2013.
 \bibitem{paper3}
-Ernst Haselsteiner and Klemens Breitfuß, \emph{Security in Near Field Communication (NFC), Strengths and Weaknesses} \hskip 1em plus
-0.5em minus 0.4em .
+E. Haselsteiner and K. Breitfuss, ``Security in Near Field Communication (NFC), Strengths and Weaknesses'' 
+Gratkorn, Austria, July 2006.
 \bibitem{paper4}
-Gauthier Van Damme and Karel Wouters, \emph{Practical Experiences with NFC Security on mobile Phones}, \hskip 1em plus
-0.5em minus 0.4em\relax 2009.
+G. Van Damme and K. Wouters, ``Practical Experiences with NFC Security on mobile Phones'',
+Workshop on RFID Security, 2009.
 \bibitem{paper5}
-W. Chen, G.P. Hancke and K.E. Mayes, Y. Lien, J-H. Chiu, \emph{NFC Mobile Transactions and Authentication based on GSM Network}, \hskip 1em plus
-0.5em minus 0.4em\relax 2010.
+W. Chen, G.P. Hancke, K.E. Mayes, Y. Lien, and J-H. Chiu, ``NFC Mobile Transactions and Authentication based on GSM Network'', 
+Monaco, Germany, April 2010.
 \bibitem{paper6}
-Pascal Urien, \emph{A Secure Cloud of Electronic Keys for NFC Locks Securely Controlled by NFC Smartphones}, \hskip 1em plus
-0.5em minus 0.4em\relax Las Vegas,  IEEE CCNC 2014.
+P. Urien, ``A Secure Cloud of Electronic Keys for NFC Locks Securely Controlled by NFC Smartphones'',
+in proc. of IEEE CCNC Las Vegas, US, January 2014.
 \end{thebibliography}
 
 
