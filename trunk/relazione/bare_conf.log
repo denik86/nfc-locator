@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.7.13)  13 DEC 2013 16:09
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.7.13)  13 DEC 2013 17:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -293,9 +293,6 @@ LaTeX Font Info:    Font shape `OML/ptm/m/it' in size <10> not available
 Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no ™ in font ptmr7t!
-Missing character: There is no â in font ptmr7t!
-Missing character: There is no € in font ptmr7t!
-Missing character: There is no ™ in font ptmr7t!
 
 <fig3.png, id=20, 393.47pt x 421.575pt>
 File: fig3.png Graphic file (type png)
@@ -359,13 +356,13 @@ Before submitting the final camera ready copy, remember to:
 
 [5 <./fig7.png>] (./bare_conf.aux) ) 
 Here is how much of TeX's memory you used:
- 2420 strings out of 493315
- 38305 string characters out of 6137904
- 102544 words of memory out of 5000000
- 5851 multiletter control sequences out of 15000+600000
+ 2422 strings out of 493315
+ 38318 string characters out of 6137904
+ 102550 words of memory out of 5000000
+ 5853 multiletter control sequences out of 15000+600000
  36317 words of font info for 65 fonts, out of 8000000 for 9000
  960 hyphenation exceptions out of 8191
- 37i,6n,24p,964b,206s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 37i,6n,24p,961b,206s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2013/texmf-dist/fonts/e
 nc/dvips/base/8r.enc}</usr/local/texlive/2013/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmmi10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsf
@@ -373,7 +370,7 @@ onts/cm/cmsy10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/ut
 mb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb>
 </usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/loca
 l/texlive/2013/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on bare_conf.pdf (5 pages, 1816539 bytes).
+Output written on bare_conf.pdf (5 pages, 1816609 bytes).
 PDF statistics:
  62 PDF objects out of 1000 (max. 8388607)
  32 compressed objects within 1 object stream
