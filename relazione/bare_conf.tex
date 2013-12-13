@@ -454,7 +454,7 @@ Moreover, those tags can be used to uniquely identify the positions of the users
 
 \section{Introduction}
 % no \IEEEPARstart
-In recent years the NFC technology is becoming widely used, a protocol that provides a bidirectional short range wireless connectivity for information exchange.
+In recent years the NFC technology is becoming widely used, a protocol that provides a bidirectional short range wireless connectivity for information exchange [8].
 The NFC had a strong impact on many practical use, and that caused a big interest from many big companies (Nokia, Sony, Philips, Samsung, Motorola).
 Thanks to the ease of use and the lack of configuration of the protocol, it became used on a lot of fields:
 
@@ -519,13 +519,13 @@ The system is composed by three logical part:
 
 The client consist of an Android application (NFC Locator) that allows the user to detect the resource. After the reading, the app will send the request to access the resource to the remote server.
 The server (NFC Authenticator) is an application that receive requests and contains a database that store usernames, passwords, and permission of everyone.  There is also a graphical interface that allows the system administrator to manage the accounts.
-The resource consist of a component that can be remotely controlled by the server, in our case a prototype of a door lock. Through an ethernet connection it can communicate on the network with the server and receive the “open” command.
+The resource consists of a component that can be remotely controlled by the server, in our case a prototype of a door lock. Through an ethernet connection it can communicate on the network with the server and receive the “open” command.
 
 \subsection{Networks}
 
 Three kinds of connections are involved: wired network (between server and resource), wi-fi network (between server and client) and NFC (between client and resource).
 
-The connection between the server and client can happen in two ways that differ regard to safety. The first is the connection via local wi-fi network, in which the smartphone is forced to connect to the local wireless network of the building to gain access to a gate, in fact only in this case can communicate with the control server. The second is the connection to the server using the UMTS mobile telephone technology: in this case the access request travels through the global network, and then get to the server. This mode can only be present if the server has a static external IP address, so that it can be accessed remotely. This second way is much less safer than the first one. For this reason, the connection between client and server is protected with a cryptographic protocol , the Transport Layer Security (TLS ), which allows secure communication in the transport layer , preventing eavesdropping or “man in the middle” attacks. 
+The connection between the server and client can happen in two ways that differ regard to safety. The first is the connection via local wi-fi network, in which the smartphone is forced to connect to the local wireless network of the building to gain access to a gate, in fact only in this case can communicate with the control server. The second is the connection to the server using the UMTS mobile telephone technology: in this case the access request travels through the global network, and then get to the server. This mode can only be present if the server has a static external IP address, so that it can be accessed remotely. This second way is much less safer than the first one. For this reason, the connection between client and server is protected with a cryptographic protocol, the Transport Layer Security (TLS), which allows secure communication in the transport layer, preventing eavesdropping or “man in the middle” attacks. 
 
 NFC communication allows data transfer between the client and the resource, in particular a unique identifier representing the door, which will be sent to the server during the authentication process.
 
@@ -554,7 +554,7 @@ Even if the configuration must be done once, it seemed too difficult to let conf
 
 \subsubsection{Reading}
 
-to maintain the application easy to use, the user don’t have to launch any application to detect a resource. It is enough to approach the phone to the resource to make appear the window on the image 4. The only part that can be touched in the interface is the big green button in the middle, that given it’s large dimension is easily usable even for visually impaired people. When the button is pressed, a request containing the login and the resource ID is sent to the server, while the app shows a progress indicator. The message sent must contains a string in the following pattern:
+to maintain the application easy to use, the user do not have to launch any application to detect a resource. It is enough to approach the phone to the resource to make appear the window on the image 4. The only part that can be touched in the interface is the big green button in the middle, that given it’s large dimension is easily usable even for visually impaired people. When the button is pressed, a request containing the login and the resource ID is sent to the server, while the app shows a progress indicator. The message sent must contains a string in the following pattern:
 \begin{center}
 \textit{``\textless username\textgreater :\textless password\textgreater :\textless resource ID\textgreater}''
 \end{center}
@@ -589,15 +589,15 @@ Once the channel is open, the server waits to receive a message from the client 
 the graphics part is characterized by a window with three main areas:
 
 \begin{itemize}
- \item members list
- \item authorizations list
- \item list permissions owned by the user
+ \item members list;
+ \item authorizations list;
+ \item list permissions owned by the user.
 \end{itemize}
 
 An element can be added or removed to the user list through the buttons at the bottom. The same applies to the other two lists.
 Through the ``Generate QR Code'' button can be created a QR code to automatically configure the client of the selected user.
 
-The "Start Server" button starts the listener server to accept requests. From that moment on, every client can connect to the server.
+The ``Start Server'' button starts the listener server to accept requests. From that moment on, every client can connect to the server.
 
 \subsubsection{Map Area}
 
@@ -612,7 +612,7 @@ Another feature is the presence of a window that alerts the administrator of aut
 
 \subsection{Database}
 
-Users and permissions are stored in a relational database implemented with Sqlite. There are three tables. A table contains the information of users: username and password. Another table contains data regarding the resource: name of door and IP:PORT address.
+Users and permissions are stored in a relational database implemented with SQLite [7]. There are three tables. A table contains the information of users: username and password. Another table contains data regarding the resource: name of door and IP:PORT address.
 Finally, a third table identifies each pair user-resource to store authorized accesses of each user.
 Database has been designed with ER diagram shown in Figure 6.
 
@@ -718,6 +718,10 @@ Monaco, Germany, April 2010.
 \bibitem{paper6}
 P. Urien, ``A Secure Cloud of Electronic Keys for NFC Locks Securely Controlled by NFC Smartphones'',
 in proc. of IEEE CCNC Las Vegas, US, January 2014.
+\bibitem{sqlite}
+SQLite Homepage, http://www.sqlite.org
+\bibitem{nfc}
+NFC Forum Specifications, http://www.nfc-forum.org/specs/
 \end{thebibliography}
 
 
