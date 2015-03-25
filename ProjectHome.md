@@ -1,0 +1,1 @@
+Uses NFC tags to localize a resource, and authenticate the user to a server to use the resource
